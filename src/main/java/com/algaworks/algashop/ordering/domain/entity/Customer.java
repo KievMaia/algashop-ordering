@@ -4,7 +4,6 @@ import com.algaworks.algashop.ordering.domain.exception.CustomerArchivedExceptio
 import com.algaworks.algashop.ordering.domain.valueobject.*;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.UUID;
