@@ -2,6 +2,7 @@ package com.algaworks.algashop.ordering.domain.entity;
 
 import com.algaworks.algashop.ordering.domain.exception.CustomerArchivedException;
 import com.algaworks.algashop.ordering.domain.valueobject.*;
+import lombok.Builder;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
@@ -17,40 +18,47 @@ public class Customer implements Serializable {
     private Email email;
     private Phone phone;
     private Document document;
-    private Boolean promotionNotificationAllowed;
+    private Boolean promotionNotificationsAllowed;
     private Boolean archived;
     private OffsetDateTime registeredAt;
     private OffsetDateTime archivedAt;
     private LoyaltyPoints loyaltyPoints;
+    private Address address;
 
-    public Customer(CustomerId id, FullName fullName, BirthDate birthDate, Email email, Phone phone, Document document,
-                    Boolean promotionNotificationAllowed, OffsetDateTime registeredAt) {
-        this.setId(id);
-        this.setFullName(fullName);
-        this.setBirthDate(birthDate);
-        this.setEmail(email);
-        this.setPhone(phone);
-        this.setDocument(document);
-        this.setPromotionNotificationAllowed(promotionNotificationAllowed);
-        this.setRegisteredAt(registeredAt);
-        this.setArchived(false);
-        this.setLoyaltyPoints(LoyaltyPoints.ZERO);
+    @Builder(builderClassName = "BrandNewCustomerBuild", builderMethodName = "brandNew")
+    private static Customer createBrandNew(FullName fullName, BirthDate birthDate, Email email, Phone phone, Document document,
+                                          Boolean promotionNotificationsAllowed, Address address) {
+        return new Customer(
+                new CustomerId(),
+                fullName,
+                birthDate,
+                email,
+                phone,
+                document,
+                promotionNotificationsAllowed,
+                false,
+                OffsetDateTime.now(),
+                null,
+                LoyaltyPoints.ZERO,
+                address);
     }
 
-    public Customer(CustomerId id, FullName fullName, BirthDate birthDate, Email email, Phone phone, Document document,
-                    Boolean promotionNotificationAllowed, Boolean archived, OffsetDateTime registeredAt,
-                    OffsetDateTime archivedAt, LoyaltyPoints loyaltyPoints) {
+    @Builder(builderClassName = "ExistingCustomerBuild", builderMethodName = "existing")
+    private Customer(CustomerId id, FullName fullName, BirthDate birthDate, Email email, Phone phone, Document document,
+                     Boolean promotionNotificationsAllowed, Boolean archived, OffsetDateTime registeredAt,
+                     OffsetDateTime archivedAt, LoyaltyPoints loyaltyPoints, Address address) {
         this.setId(id);
         this.setFullName(fullName);
         this.setBirthDate(birthDate);
         this.setEmail(email);
         this.setPhone(phone);
         this.setDocument(document);
-        this.setPromotionNotificationAllowed(promotionNotificationAllowed);
+        this.setPromotionNotificationsAllowed(promotionNotificationsAllowed);
         this.setArchived(archived);
         this.setRegisteredAt(registeredAt);
         this.setArchivedAt(archivedAt);
         this.setLoyaltyPoints(loyaltyPoints);
+        this.setAddress(address);
     }
 
     public void addLoyaltyPoints(LoyaltyPoints loyaltyPointsAdded) {
@@ -67,17 +75,18 @@ public class Customer implements Serializable {
         this.setDocument(new Document("000-000-0000"));
         this.setEmail(new Email(UUID.randomUUID() + "@anonymous.com"));
         this.setBirthDate(null);
-        this.setPromotionNotificationAllowed(false);
+        this.setPromotionNotificationsAllowed(false);
+        this.setAddress(this.address.toBuilder().number("Anonymized").complement(null).build());
     }
 
     public void enablePromotionNotification() {
         this.verifyIfChangeable();
-        this.setPromotionNotificationAllowed(true);
+        this.setPromotionNotificationsAllowed(true);
     }
 
     public void disablePromotionNotification() {
         this.verifyIfChangeable();
-        this.setPromotionNotificationAllowed(false);
+        this.setPromotionNotificationsAllowed(false);
     }
 
     public void changeFullName(FullName fullName) {
@@ -93,6 +102,11 @@ public class Customer implements Serializable {
     public void changePhone(Phone phone) {
         this.verifyIfChangeable();
         this.setPhone(phone);
+    }
+
+    public void changeAddress(Address address) {
+        verifyIfChangeable();
+        this.setAddress(address);
     }
 
     public CustomerId id() {
@@ -119,8 +133,8 @@ public class Customer implements Serializable {
         return document;
     }
 
-    public Boolean isPromotionNotificationAllowed() {
-        return promotionNotificationAllowed;
+    public Boolean isPromotionNotificationsAllowed() {
+        return promotionNotificationsAllowed;
     }
 
     public Boolean isArchived() {
@@ -138,6 +152,11 @@ public class Customer implements Serializable {
     public LoyaltyPoints loyaltyPoints() {
         return loyaltyPoints;
     }
+
+    public Address address() {
+        return address;
+    }
+
 
     private void setId(CustomerId id) {
         Objects.requireNonNull(id);
@@ -172,9 +191,9 @@ public class Customer implements Serializable {
         this.document = document;
     }
 
-    private void setPromotionNotificationAllowed(Boolean promotionNotificationAllowed) {
-        Objects.requireNonNull(promotionNotificationAllowed);
-        this.promotionNotificationAllowed = promotionNotificationAllowed;
+    private void setPromotionNotificationsAllowed(Boolean promotionNotificationsAllowed) {
+        Objects.requireNonNull(promotionNotificationsAllowed);
+        this.promotionNotificationsAllowed = promotionNotificationsAllowed;
     }
 
     private void setArchived(Boolean archived) {
@@ -194,6 +213,11 @@ public class Customer implements Serializable {
     private void setLoyaltyPoints(LoyaltyPoints loyaltyPoints) {
         Objects.requireNonNull(loyaltyPoints);
         this.loyaltyPoints = loyaltyPoints;
+    }
+
+    private void setAddress(Address address) {
+        Objects.requireNonNull(address);
+        this.address = address;
     }
 
     private void verifyIfChangeable() {
