@@ -3,13 +3,17 @@ package com.algaworks.algashop.ordering.domain.entity;
 
 import com.algaworks.algashop.ordering.domain.valueobject.BillingInfo;
 import com.algaworks.algashop.ordering.domain.valueobject.Money;
+import com.algaworks.algashop.ordering.domain.valueobject.ProductName;
 import com.algaworks.algashop.ordering.domain.valueobject.Quantity;
 import com.algaworks.algashop.ordering.domain.valueobject.ShippingInfo;
 import com.algaworks.algashop.ordering.domain.valueobject.id.CustomerId;
 import com.algaworks.algashop.ordering.domain.valueobject.id.OrderId;
+import com.algaworks.algashop.ordering.domain.valueobject.id.ProductId;
+import lombok.Builder;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -37,6 +41,7 @@ public class Order {
 
     private Set<OrderItem> items;
 
+    @Builder(builderClassName = "ExistingOrderBuilder", builderMethodName = "existing")
     public Order(OrderId id, CustomerId customerId, Money totalAmount, Quantity totalItems, OffsetDateTime placedAt, OffsetDateTime paidAt, OffsetDateTime canceledAt, OffsetDateTime readydAt, BillingInfo billing, ShippingInfo shipping, OrderStatusEnum status, PaymentMethodEnum paymentMethod, Money shippingCost, LocalDate expectedDeliveryDate, Set<OrderItem> items) {
         this.setId(id);
         this.setCustomerId(customerId);
@@ -53,6 +58,42 @@ public class Order {
         this.setShippingCost(shippingCost);
         this.setExpectedDeliveryDate(expectedDeliveryDate);
         this.setItems(items);
+    }
+
+    public static Order draft(CustomerId customerId) {
+        return new Order(
+                new OrderId(),
+                customerId,
+                Money.ZERO,
+                Quantity.ZERO,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                OrderStatusEnum.DRAFT,
+                null,
+                null,
+                null,
+                new HashSet<>()
+        );
+    }
+
+    public void addItem(ProductId productId, ProductName productName, Money price, Quantity quantity) {
+        var orderItem = OrderItem.brandNew()
+                .orderId(this.id())
+                .price(price)
+                .quantity(quantity)
+                .productName(productName)
+                .productId(productId)
+                .build();
+
+        if (this.items == null) {
+            this.items = new HashSet<>();
+        }
+
+        this.items.add(orderItem);
     }
 
     public OrderId id() {
@@ -152,12 +193,10 @@ public class Order {
     }
 
     private void setBilling(BillingInfo billing) {
-        Objects.requireNonNull(billing);
         this.billing = billing;
     }
 
     private void setShipping(ShippingInfo shipping) {
-        Objects.requireNonNull(shipping);
         this.shipping = shipping;
     }
 
@@ -167,7 +206,6 @@ public class Order {
     }
 
     private void setPaymentMethod(PaymentMethodEnum paymentMethod) {
-        Objects.requireNonNull(paymentMethod);
         this.paymentMethod = paymentMethod;
     }
 

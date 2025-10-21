@@ -1,53 +1,52 @@
 package com.algaworks.algashop.ordering.domain.valueobject;
 
-import com.algaworks.algashop.ordering.domain.exception.ErrorMessages;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Objects;
 
 public record Money(BigDecimal value) implements Comparable<Money> {
 
-    private static final RoundingMode ROUNDING_MODE = RoundingMode.HALF_EVEN;
-    private static final BigDecimal ZERO = new BigDecimal("0").setScale(0, ROUNDING_MODE);
+    private static final RoundingMode roundingMode = RoundingMode.HALF_EVEN;
 
-    public Money {
-        Objects.requireNonNull(value);
-        value = value.setScale(2, RoundingMode.HALF_EVEN);
-        if (value.compareTo(ZERO) < 0) {
-            throw new IllegalArgumentException(ErrorMessages.VALIDATION_NEGATIVE_VALUE);
-        }
+    public static final Money ZERO = new Money(BigDecimal.ZERO);
+
+    public Money(String value) {
+        this(new BigDecimal(value));
     }
 
-    public Money(String number) {
-        this(new BigDecimal(Objects.requireNonNull(number)));
+    public Money(BigDecimal value) {
+        Objects.requireNonNull(value); //todo mensagem
+        this.value = value.setScale(2, roundingMode);
+        if (this.value.signum() == -1) {
+            throw new IllegalArgumentException();//todo mensagem
+        }
     }
 
     public Money multiply(Quantity quantity) {
-        Objects.requireNonNull(quantity, "Quantity cannot be null");
-        if (!quantity.isAtLeastOne()) {
-            throw new IllegalArgumentException("Quantity must be at least 1 to multiply");
+        Objects.requireNonNull(quantity);
+        if (quantity.value() < 1) {
+            throw new IllegalArgumentException();
         }
-        return new Money(this.value.multiply(BigDecimal.valueOf(quantity.value())));
+        BigDecimal multiplied = this.value.multiply(new BigDecimal(quantity.value()));
+        return new Money(multiplied);
     }
 
     public Money add(Money money) {
         Objects.requireNonNull(money);
-        return new Money(this.value.add(money.value()));
-    }
-
-    public Money divide(Money money) {
-        Objects.requireNonNull(money);
-        return new Money(this.value.divide(money.value(), 2, RoundingMode.HALF_EVEN));
-    }
-
-    @Override
-    public int compareTo(Money o) {
-        return value.compareTo(o.value);
+        return new Money(this.value.add(money.value));
     }
 
     @Override
     public String toString() {
-        return value().toString();
+        return value.toString();
+    }
+
+    @Override
+    public int compareTo(Money o) {
+        return this.value.compareTo(o.value);
+    }
+
+    public Money divide(Money o) {
+        return new Money(this.value.divide(o.value, roundingMode));
     }
 }
