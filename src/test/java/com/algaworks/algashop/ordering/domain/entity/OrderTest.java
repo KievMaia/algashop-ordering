@@ -8,8 +8,6 @@ import com.algaworks.algashop.ordering.domain.valueobject.id.ProductId;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.Set;
-
 class OrderTest {
 
     @Test
