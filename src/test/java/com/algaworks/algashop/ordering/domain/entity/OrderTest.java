@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 class OrderTest {
 
     @Test
-    public void shouGenerate() {
+    public void shouldGenerate() {
          Order.draft(new CustomerId());
     }
 
@@ -56,5 +56,28 @@ class OrderTest {
 
         Assertions.assertThatExceptionOfType(UnsupportedOperationException.class)
                 .isThrownBy(items::clear);
+    }
+
+    @Test
+    public void shouldCalculateTotals() {
+        var order = Order.draft(new CustomerId());
+
+        var productId = new ProductId();
+        order.addItem(
+                productId,
+                new ProductName("Mouse pad"),
+                new Money("100"),
+                new Quantity(2)
+        );
+
+        order.addItem(
+                productId,
+                new ProductName("RAM Memory"),
+                new Money("50"),
+                new Quantity(1)
+        );
+
+        Assertions.assertThat(order.totalAmount()).isEqualTo(new Money("250"));
+        Assertions.assertThat(order.totalItems()).isEqualTo(new Quantity(3));
     }
 }
