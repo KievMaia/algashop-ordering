@@ -1,6 +1,7 @@
 package com.algaworks.algashop.ordering.domain.entity;
 
 
+import com.algaworks.algashop.ordering.domain.exception.OrderStatusCannotBeChangedException;
 import com.algaworks.algashop.ordering.domain.valueobject.BillingInfo;
 import com.algaworks.algashop.ordering.domain.valueobject.Money;
 import com.algaworks.algashop.ordering.domain.valueobject.ProductName;
@@ -95,6 +96,27 @@ public class Order {
         }
         this.items.add(orderItem);
         this.recalculateTotals();
+    }
+
+    public void place() {
+        //TODO business rules
+        this.changeStatus(OrderStatusEnum.PLACED);
+    }
+
+    private void changeStatus(OrderStatusEnum newStatus) {
+        Objects.requireNonNull(newStatus);
+        if(this.status().canNotChangeTo(newStatus)) {
+            throw new OrderStatusCannotBeChangedException(this.id(), this.status(), newStatus);
+        }
+        this.setStatus(newStatus);
+    }
+
+    public boolean isDraft() {
+        return OrderStatusEnum.DRAFT.equals(this.status());
+    }
+
+    public boolean isPlaced() {
+        return OrderStatusEnum.PLACED.equals(this.status());
     }
 
     public OrderId id() {
