@@ -20,4 +20,5 @@ public class ErrorMessages {
     public static final String VALIDATION_NEGATIVE_VALUE = "Value cannot be negative";
 
     public static final String ERROR_ORDER_STATUS_CANNOT_BE_CHANGED = "Cannot change order %s status from %s to %s";
+    public static final String ERROR_ORDER_DELIVERY_DATE_CANNOT_BE_IN_THE_PAST = "Order with id %s is invalid";
 }
