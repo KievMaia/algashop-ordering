@@ -19,6 +19,8 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 
+import static com.algaworks.algashop.ordering.domain.entity.OrderStatusEnum.PLACED;
+
 class OrderTest {
 
     @Test
@@ -93,16 +95,23 @@ class OrderTest {
     }
 
     @Test
+    public void givenPlacedOrder_WhenMarkAsPaid_SouldChangeToPaid() {
+        var order = OrderTestDataBuilder.anOrder().orderStatusEnum(PLACED).build();
+        order.markAsPaid();
+        Assertions.assertThat(order.isPaid()).isTrue();
+        Assertions.assertThat(order.paidAt()).isNotNull();
+    }
+
+    @Test
     public void givenDraftOrder_WhenPlace_ShouldChangeToPlaced() {
-        var order = Order.draft(new CustomerId());
+        var order = OrderTestDataBuilder.anOrder().build();
         order.place();
         Assertions.assertThat(order.isPlaced()).isTrue();
     }
 
     @Test
     public void givenPlacedOrder_WhenTryToPlace_ShouldGenerateException() {
-        var order = Order.draft(new CustomerId());
-        order.place();
+        var order = OrderTestDataBuilder.anOrder().orderStatusEnum(PLACED).build();
         Assertions.assertThatExceptionOfType(OrderStatusCannotBeChangedException.class)
                 .isThrownBy(order::place);
     }
