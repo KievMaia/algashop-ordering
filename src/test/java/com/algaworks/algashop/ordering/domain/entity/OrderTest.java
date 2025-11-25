@@ -10,10 +10,9 @@ import com.algaworks.algashop.ordering.domain.valueobject.Money;
 import com.algaworks.algashop.ordering.domain.valueobject.Phone;
 import com.algaworks.algashop.ordering.domain.valueobject.ProductName;
 import com.algaworks.algashop.ordering.domain.valueobject.Quantity;
-import com.algaworks.algashop.ordering.domain.valueobject.ShippingInfo;
+import com.algaworks.algashop.ordering.domain.valueobject.Shipping;
 import com.algaworks.algashop.ordering.domain.valueobject.ZipCode;
 import com.algaworks.algashop.ordering.domain.valueobject.id.CustomerId;
-import com.algaworks.algashop.ordering.domain.valueobject.id.ProductId;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -32,23 +31,20 @@ class OrderTest {
     public void shouldAddItem() {
         var order = Order.draft(new CustomerId());
 
-        var productId = new ProductId();
-        order.addItem(
-                productId,
-                new ProductName("Mouse pad"),
-                new Money("100"),
-                new Quantity(1)
-        );
+        var product = ProductTestDataBuilder.aProductAltMousePad().build();
+        var productId = product.id();
+
+        order.addItem(product, new Quantity(1));
 
         Assertions.assertThat(order.items().size()).isEqualTo(1);
+
         var orderItem = order.items().iterator().next();
 
         Assertions.assertWith(orderItem,
                 (i) -> Assertions.assertThat(i.id()).isNotNull(),
-                (i) -> Assertions.assertThat(i.productName()).isEqualTo(new ProductName("Mouse pad")),
+                (i) -> Assertions.assertThat(i.productName()).isEqualTo(new ProductName("Mouse Pad")),
                 (i) -> Assertions.assertThat(i.productId()).isEqualTo(productId),
                 (i) -> Assertions.assertThat(i.price()).isEqualTo(new Money("100")),
-                (i) -> Assertions.assertThat(i.orderId()).isEqualTo(order.id()),
                 (i) -> Assertions.assertThat(i.quantity()).isEqualTo(new Quantity(1))
         );
     }
@@ -57,13 +53,9 @@ class OrderTest {
     public void shouldGenerateExceptionWhenTryToChangeItemSet() {
         var order = Order.draft(new CustomerId());
 
-        var productId = new ProductId();
-        order.addItem(
-                productId,
-                new ProductName("Mouse pad"),
-                new Money("100"),
-                new Quantity(1)
-        );
+        var product = ProductTestDataBuilder.aProductAltMousePad().build();
+
+        order.addItem(product, new Quantity(1));
 
         var items = order.items();
 
@@ -75,22 +67,14 @@ class OrderTest {
     public void shouldCalculateTotals() {
         var order = Order.draft(new CustomerId());
 
-        var productId = new ProductId();
-        order.addItem(
-                productId,
-                new ProductName("Mouse pad"),
-                new Money("100"),
-                new Quantity(2)
-        );
+        var productMouse = ProductTestDataBuilder.aProductAltMousePad().build();
+        var productRam = ProductTestDataBuilder.aProductAltRamMemory().build();
 
-        order.addItem(
-                productId,
-                new ProductName("RAM Memory"),
-                new Money("50"),
-                new Quantity(1)
-        );
+        order.addItem(productMouse, new Quantity(2));
 
-        Assertions.assertThat(order.totalAmount()).isEqualTo(new Money("250"));
+        order.addItem(productRam, new Quantity(1));
+
+        Assertions.assertThat(order.totalAmount()).isEqualTo(new Money("400"));
         Assertions.assertThat(order.totalItems()).isEqualTo(new Quantity(3));
     }
 
@@ -166,7 +150,7 @@ class OrderTest {
                 .state("South Carolina")
                 .zipCode(new ZipCode("79911")).build();
 
-        var shippingInfo = ShippingInfo.builder()
+        var shippingInfo = Shipping.builder()
                 .address(address)
                 .fullName(new FullName("Joe", "Doe"))
                 .document(new Document("112-33-2321"))
@@ -196,7 +180,7 @@ class OrderTest {
                 .state("South Carolina")
                 .zipCode(new ZipCode("79911")).build();
 
-        var shippingInfo = ShippingInfo.builder()
+        var shippingInfo = Shipping.builder()
                 .address(address)
                 .fullName(new FullName("Joe", "Doe"))
                 .document(new Document("112-33-2321"))
@@ -214,19 +198,17 @@ class OrderTest {
     @Test
     public void givenDraftOrder_WhenChangeItem_shouldRecalculate() {
         var order = Order.draft(new CustomerId());
-        order.addItem(
-                new ProductId(),
-                new ProductName("Desktop X11"),
-                new Money("10.00"),
-                new Quantity(3)
-        );
+
+        var product = ProductTestDataBuilder.aProductAltMousePad().build();
+
+        order.addItem(product, new Quantity(3));
 
         var orderItem = order.items().iterator().next();
 
         order.changeItemQuantity(orderItem.id(), new Quantity(5));
 
         Assertions.assertWith(order,
-                (o) -> Assertions.assertThat(o.totalAmount()).isEqualTo(new Money("50.00")),
+                (o) -> Assertions.assertThat(o.totalAmount()).isEqualTo(new Money("500.00")),
                 (o) -> Assertions.assertThat(o.totalItems()).isEqualTo(new Quantity(5))
                 );
     }

@@ -7,13 +7,12 @@ import com.algaworks.algashop.ordering.domain.exception.OrderInvalidShippingDeli
 import com.algaworks.algashop.ordering.domain.exception.OrderStatusCannotBeChangedException;
 import com.algaworks.algashop.ordering.domain.valueobject.BillingInfo;
 import com.algaworks.algashop.ordering.domain.valueobject.Money;
-import com.algaworks.algashop.ordering.domain.valueobject.ProductName;
+import com.algaworks.algashop.ordering.domain.valueobject.Product;
 import com.algaworks.algashop.ordering.domain.valueobject.Quantity;
-import com.algaworks.algashop.ordering.domain.valueobject.ShippingInfo;
+import com.algaworks.algashop.ordering.domain.valueobject.Shipping;
 import com.algaworks.algashop.ordering.domain.valueobject.id.CustomerId;
 import com.algaworks.algashop.ordering.domain.valueobject.id.OrderId;
 import com.algaworks.algashop.ordering.domain.valueobject.id.OrderItemId;
-import com.algaworks.algashop.ordering.domain.valueobject.id.ProductId;
 import lombok.Builder;
 
 import java.math.BigDecimal;
@@ -38,7 +37,7 @@ public class Order {
     private OffsetDateTime readydAt;
 
     private BillingInfo billing;
-    private ShippingInfo shipping;
+    private Shipping shipping;
 
     private OrderStatusEnum status;
     private PaymentMethodEnum paymentMethod;
@@ -49,7 +48,7 @@ public class Order {
     private Set<OrderItem> items;
 
     @Builder(builderClassName = "ExistingOrderBuilder", builderMethodName = "existing")
-    public Order(OrderId id, CustomerId customerId, Money totalAmount, Quantity totalItems, OffsetDateTime placedAt, OffsetDateTime paidAt, OffsetDateTime canceledAt, OffsetDateTime readydAt, BillingInfo billing, ShippingInfo shipping, OrderStatusEnum status, PaymentMethodEnum paymentMethod, Money shippingCost, LocalDate expectedDeliveryDate, Set<OrderItem> items) {
+    public Order(OrderId id, CustomerId customerId, Money totalAmount, Quantity totalItems, OffsetDateTime placedAt, OffsetDateTime paidAt, OffsetDateTime canceledAt, OffsetDateTime readydAt, BillingInfo billing, Shipping shipping, OrderStatusEnum status, PaymentMethodEnum paymentMethod, Money shippingCost, LocalDate expectedDeliveryDate, Set<OrderItem> items) {
         this.setId(id);
         this.setCustomerId(customerId);
         this.setTotalAmount(totalAmount);
@@ -87,14 +86,16 @@ public class Order {
         );
     }
 
-    public void addItem(ProductId productId, ProductName productName, Money price, Quantity quantity) {
+    public void addItem(Product product, Quantity quantity) {
+        Objects.requireNonNull(product);
+        Objects.requireNonNull(quantity);
+
         var orderItem = OrderItem.brandNew()
                 .orderId(this.id())
-                .price(price)
                 .quantity(quantity)
-                .productName(productName)
-                .productId(productId)
+                .product(product)
                 .build();
+
         if (this.items == null) {
             this.items = new HashSet<>();
         }
@@ -123,7 +124,7 @@ public class Order {
         this.setBilling(billing);
     }
 
-    public void changeShipping(ShippingInfo shipping, Money shippingCost, LocalDate expectedDeliveryDate) {
+    public void changeShipping(Shipping shipping, Money shippingCost, LocalDate expectedDeliveryDate) {
         Objects.requireNonNull(shipping);
         Objects.requireNonNull(shippingCost);
         Objects.requireNonNull(expectedDeliveryDate);
@@ -195,7 +196,7 @@ public class Order {
         return billing;
     }
 
-    public ShippingInfo shipping() {
+    public Shipping shipping() {
         return shipping;
     }
 
@@ -315,7 +316,7 @@ public class Order {
         this.billing = billing;
     }
 
-    private void setShipping(ShippingInfo shipping) {
+    private void setShipping(Shipping shipping) {
         this.shipping = shipping;
     }
 

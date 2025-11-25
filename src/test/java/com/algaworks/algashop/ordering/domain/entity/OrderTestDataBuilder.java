@@ -6,12 +6,10 @@ import com.algaworks.algashop.ordering.domain.valueobject.Document;
 import com.algaworks.algashop.ordering.domain.valueobject.FullName;
 import com.algaworks.algashop.ordering.domain.valueobject.Money;
 import com.algaworks.algashop.ordering.domain.valueobject.Phone;
-import com.algaworks.algashop.ordering.domain.valueobject.ProductName;
 import com.algaworks.algashop.ordering.domain.valueobject.Quantity;
-import com.algaworks.algashop.ordering.domain.valueobject.ShippingInfo;
+import com.algaworks.algashop.ordering.domain.valueobject.Shipping;
 import com.algaworks.algashop.ordering.domain.valueobject.ZipCode;
 import com.algaworks.algashop.ordering.domain.valueobject.id.CustomerId;
-import com.algaworks.algashop.ordering.domain.valueobject.id.ProductId;
 
 import java.time.LocalDate;
 
@@ -20,14 +18,14 @@ import static com.algaworks.algashop.ordering.domain.entity.PaymentMethodEnum.GA
 
 public class OrderTestDataBuilder {
 
-    private CustomerId customerId =  new CustomerId();
+    private CustomerId customerId = new CustomerId();
 
     private PaymentMethodEnum paymentMethodEnum = GATEWAY_BALANCE;
 
     private Money shippingCost = new Money("10.00");
     private LocalDate expectedDeliveryDate = LocalDate.now().plusWeeks(1);
 
-    private ShippingInfo shippingInfo = aShippingInfo();
+    private Shipping shipping = aShippingInfo();
     private BillingInfo billingInfo = aBillingInfo();
 
     private boolean withItems = true;
@@ -44,20 +42,14 @@ public class OrderTestDataBuilder {
 
     public Order build() {
         var order = Order.draft(customerId);
-        order.changeShipping(shippingInfo, shippingCost,expectedDeliveryDate);
+        order.changeShipping(shipping, shippingCost, expectedDeliveryDate);
         order.changeBilling(billingInfo);
         order.changePaymentMethod(paymentMethodEnum);
 
         if (withItems) {
-            order.addItem(new ProductId(),
-                    new ProductName("Notebook X11"),
-                    new Money("3000"),
-                    new Quantity(2));
+            order.addItem(ProductTestDataBuilder.aProduct().build(), new Quantity(2));
 
-            order.addItem(new ProductId(),
-                    new ProductName("4GB RAM"),
-                    new Money("200"),
-                    new Quantity(1));
+            order.addItem(ProductTestDataBuilder.aProductAltRamMemory().build(), new Quantity(1));
         }
         switch (this.orderStatusEnum) {
             case DRAFT -> {
@@ -77,8 +69,8 @@ public class OrderTestDataBuilder {
         return order;
     }
 
-    public static ShippingInfo aShippingInfo() {
-        return ShippingInfo.builder()
+    public static Shipping aShippingInfo() {
+        return Shipping.builder()
                 .address(anAddress())
                 .fullName(new FullName("Joe", "Doe"))
                 .document(new Document("112-33-2321"))
@@ -86,7 +78,7 @@ public class OrderTestDataBuilder {
                 .build();
     }
 
-    public static   BillingInfo aBillingInfo() {
+    public static BillingInfo aBillingInfo() {
         return BillingInfo.builder()
                 .address(anAddress())
                 .document(new Document("225-09-1992"))
@@ -127,8 +119,8 @@ public class OrderTestDataBuilder {
         return this;
     }
 
-    public OrderTestDataBuilder shippingInfo(ShippingInfo shippingInfo) {
-        this.shippingInfo = shippingInfo;
+    public OrderTestDataBuilder shippingInfo(Shipping shipping) {
+        this.shipping = shipping;
         return this;
     }
 

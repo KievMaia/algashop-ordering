@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ShippingInfoTest {
+class ShippingTest {
 
     @Test
     void shouldCreateShippingInfoWithValidData() {
@@ -12,7 +12,7 @@ class ShippingInfoTest {
         var document = new Document("12345678900");
         var phone = new Phone("11999999999");
         var address = new Address("Rua A", "123", "Próximo", "SP", "São Paulo", "SP", new ZipCode("01000"));
-        var shippingInfo = new ShippingInfo(fullName, document, phone, address);
+        var shippingInfo = new Shipping(fullName, document, phone, address);
         assertEquals(fullName, shippingInfo.fullName());
         assertEquals(document, shippingInfo.document());
         assertEquals(phone, shippingInfo.phone());
@@ -25,7 +25,7 @@ class ShippingInfoTest {
         var phone = new Phone("11999999999");
         var address = new Address("Rua A", "123", "Próximo", "SP", "São Paulo", "SP", new ZipCode("01000"));
         assertThrows(NullPointerException.class, () ->
-            new ShippingInfo(null, document, phone, address)
+            new Shipping(null, document, phone, address)
         );
     }
 
@@ -36,7 +36,7 @@ class ShippingInfoTest {
         var address = new Address("Rua A", "123", "Próximo", "SP", "São Paulo", "SP", new ZipCode("01000"));
 
         assertThrows(NullPointerException.class, () ->
-            new ShippingInfo(fullName, null, phone, address)
+            new Shipping(fullName, null, phone, address)
         );
     }
 
@@ -46,7 +46,7 @@ class ShippingInfoTest {
         var document = new Document("12345678900");
         var address = new Address("Rua A", "123", "Próximo", "SP", "São Paulo", "SP", new ZipCode("01000"));
         assertThrows(NullPointerException.class, () ->
-            new ShippingInfo(fullName, document, null, address)
+            new Shipping(fullName, document, null, address)
         );
     }
 
@@ -56,7 +56,7 @@ class ShippingInfoTest {
         var document = new Document("123");
         var phone = new Phone("11");
         assertThrows(NullPointerException.class, () ->
-            new ShippingInfo(fullName, document, phone, null)
+            new Shipping(fullName, document, phone, null)
         );
     }
 
@@ -66,7 +66,7 @@ class ShippingInfoTest {
         var document = new Document("123");
         var phone = new Phone("11");
         var address = new Address("Rua A", "123", "Próximo", "SP", "São Paulo", "SP", new ZipCode("01000"));
-        var shippingInfo = new ShippingInfo(fullName, document, phone, address);
+        var shippingInfo = new Shipping(fullName, document, phone, address);
         assertAll(
             () -> assertEquals("John Doe", shippingInfo.fullName().toString()),
             () -> assertEquals("123", shippingInfo.document().toString()),
