@@ -5,6 +5,7 @@ public class ErrorMessages {
     private ErrorMessages() {
     }
 
+
     public static final String VALIDATION_ERROR_BIRTHDATE_MUST_IN_PAST = "BirthDate must be a past date";
 
     public static final String VALIDATION_ERROR_FULLNAME_IS_NULL = "FullName cannot be null";
@@ -24,9 +25,9 @@ public class ErrorMessages {
     public static final String ERROR_ORDER_CANNOT_BE_PLACED_HAS_NO_ITEMS = "Order %s cannot be placed, it has no items";
     public static final String ERROR_ORDER_CANNOT_BE_PLACED_HAS_NO_SHIPPING_INFO = "Order %s cannot be placed, it has no shipping info";
     public static final String ERROR_ORDER_CANNOT_BE_PLACED_HAS_NO_BILLING_INFO = "Order %s cannot be placed, it has no billing info";
-    public static final String ERROR_ORDER_CANNOT_BE_PLACED_HAS_INVALID_SHIPPING_COST = "Order %s cannot be placed, it has invalid shipping cost";
-    public static final String ERROR_ORDER_CANNOT_BE_PLACED_HAS_INVALID_DELIVERY_DATE = "Order %s cannot be placed, it has invalid delivery date";
     public static final String ERROR_ORDER_CANNOT_BE_PLACED_HAS_NO_PAYMENT_METHOD = "Order %s cannot be placed, it has no payment method";
 
     public static final String ERROR_ORDER_DOES_NOT_CONTAIN_ITEM = "Order %s doesn't contain item %s";
+
+    public static final String ERROR_PRODUCT_ID_OUT_OF_STOCK = "Product %s is out of stock";
 }

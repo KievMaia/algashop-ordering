@@ -2,14 +2,15 @@ package com.algaworks.algashop.ordering.domain.valueobject;
 
 import lombok.Builder;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
-@Builder
-public record Shipping(FullName fullName, Document document, Phone phone, Address address) {
+@Builder(toBuilder = true)
+public record Shipping(Money cost, LocalDate expectedDate, Recipient recipient, Address address) {
     public Shipping {
-        Objects.requireNonNull(fullName);
-        Objects.requireNonNull(document);
-        Objects.requireNonNull(phone);
         Objects.requireNonNull(address);
+        Objects.requireNonNull(recipient);
+        Objects.requireNonNull(cost);
+        Objects.requireNonNull(expectedDate);
     }
 }
