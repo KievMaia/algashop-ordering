@@ -3,15 +3,9 @@ package com.algaworks.algashop.ordering.domain.entity;
 import com.algaworks.algashop.ordering.domain.exception.OrderInvalidShippingDeliveryDateException;
 import com.algaworks.algashop.ordering.domain.exception.OrderStatusCannotBeChangedException;
 import com.algaworks.algashop.ordering.domain.exception.ProductOutOfStockException;
-import com.algaworks.algashop.ordering.domain.valueobject.Address;
-import com.algaworks.algashop.ordering.domain.valueobject.BillingInfo;
-import com.algaworks.algashop.ordering.domain.valueobject.Document;
-import com.algaworks.algashop.ordering.domain.valueobject.FullName;
 import com.algaworks.algashop.ordering.domain.valueobject.Money;
-import com.algaworks.algashop.ordering.domain.valueobject.Phone;
 import com.algaworks.algashop.ordering.domain.valueobject.ProductName;
 import com.algaworks.algashop.ordering.domain.valueobject.Quantity;
-import com.algaworks.algashop.ordering.domain.valueobject.ZipCode;
 import com.algaworks.algashop.ordering.domain.valueobject.id.CustomerId;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.ThrowableAssert;
@@ -110,34 +104,11 @@ class OrderTest {
 
     @Test
     public void givenDraftOrder_WhenChangeBilling_ShouldAllowChange() {
-        var address = Address.builder()
-                .street("Bourbon Street")
-                .number("12345")
-                .neighborhood("North Ville")
-                .complement("apto. 11")
-                .city("Monfort")
-                .state("South Carolina")
-                .zipCode(new ZipCode("79911"))
-                .build();
-
-        var billingInfo = BillingInfo.builder()
-                .address(address)
-                .document(new Document("225-09-1992"))
-                .phone(new Phone("123-111-9911"))
-                .fullName(new FullName("Joe", "Doe"))
-                .build();
-
+        var billing = OrderTestDataBuilder.aBilling();
         var order = Order.draft(new CustomerId());
-        order.changeBilling(billingInfo);
+        order.changeBilling(billing);
 
-        var expectedBillingInfo = BillingInfo.builder()
-                .address(address)
-                .document(new Document("225-09-1992"))
-                .phone(new Phone("123-111-9911"))
-                .fullName(new FullName("Joe", "Doe"))
-                .build();
-
-        Assertions.assertThat(order.billing()).isEqualTo(expectedBillingInfo);
+        Assertions.assertThat(order.billing()).isEqualTo(billing);
     }
 
     @Test

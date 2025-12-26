@@ -1,8 +1,9 @@
 package com.algaworks.algashop.ordering.domain.entity;
 
 import com.algaworks.algashop.ordering.domain.valueobject.Address;
-import com.algaworks.algashop.ordering.domain.valueobject.BillingInfo;
+import com.algaworks.algashop.ordering.domain.valueobject.Billing;
 import com.algaworks.algashop.ordering.domain.valueobject.Document;
+import com.algaworks.algashop.ordering.domain.valueobject.Email;
 import com.algaworks.algashop.ordering.domain.valueobject.FullName;
 import com.algaworks.algashop.ordering.domain.valueobject.Money;
 import com.algaworks.algashop.ordering.domain.valueobject.Phone;
@@ -24,7 +25,7 @@ public class OrderTestDataBuilder {
     private PaymentMethodEnum paymentMethodEnum = GATEWAY_BALANCE;
 
     private Shipping shipping = aShipping();
-    private BillingInfo billingInfo = aBillingInfo();
+    private Billing billing = aBilling();
 
     private boolean withItems = true;
 
@@ -41,7 +42,7 @@ public class OrderTestDataBuilder {
     public Order build() {
         var order = Order.draft(customerId);
         order.changeShipping(shipping);
-        order.changeBilling(billingInfo);
+        order.changeBilling(billing);
         order.changePaymentMethod(paymentMethodEnum);
 
         if (withItems) {
@@ -80,11 +81,12 @@ public class OrderTestDataBuilder {
                 .build();
     }
 
-    public static BillingInfo aBillingInfo() {
-        return BillingInfo.builder()
+    public static Billing aBilling() {
+        return Billing.builder()
                 .address(anAddress())
                 .document(new Document("225-09-1992"))
                 .phone(new Phone("123-111-9911"))
+                .email(new Email("joe.doe@gmail.com"))
                 .fullName(new FullName("Joe", "Doe"))
                 .build();
     }
@@ -135,13 +137,13 @@ public class OrderTestDataBuilder {
         return this;
     }
 
-    public OrderTestDataBuilder shippingInfo(Shipping shipping) {
+    public OrderTestDataBuilder shipping(Shipping shipping) {
         this.shipping = shipping;
         return this;
     }
 
-    public OrderTestDataBuilder billingInfo(BillingInfo billingInfo) {
-        this.billingInfo = billingInfo;
+    public OrderTestDataBuilder billing(Billing billing) {
+        this.billing = billing;
         return this;
     }
 

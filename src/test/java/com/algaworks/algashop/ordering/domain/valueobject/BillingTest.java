@@ -4,17 +4,19 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class BillingInfoTest {
+class BillingTest {
     @Test
     void shouldCreateBillingInfoWithValidData() {
         var fullName = new FullName("John", "Doe");
         var document = new Document("12345678900");
         var phone = new Phone("11999999999");
+        var email = new Email("joe.doe@gmail.com");
         var address = new Address("Rua A", "123", "Próximo", "SP", "São Paulo", "SP", new ZipCode("01000"));
-        var billingInfo = new BillingInfo(fullName, document, phone, address);
+        var billingInfo = new Billing(fullName, document, phone, email, address);
         assertEquals(fullName, billingInfo.fullName());
         assertEquals(document, billingInfo.document());
         assertEquals(phone, billingInfo.phone());
+        assertEquals(email, billingInfo.email());
         assertEquals(address, billingInfo.address());
     }
 
@@ -23,8 +25,9 @@ class BillingInfoTest {
         var document = new Document("123");
         var phone = new Phone("11");
         var address = new Address("Rua A", "123", "Próximo", "SP", "São Paulo", "SP", new ZipCode("01000"));
+        var email = new Email("joe.doe@gmail.com");
         assertThrows(NullPointerException.class, () ->
-            new BillingInfo(null, document, phone, address)
+                new Billing(null, document, phone, email, address)
         );
     }
 
@@ -33,8 +36,9 @@ class BillingInfoTest {
         var fullName = new FullName("John", "Doe");
         var phone = new Phone("11");
         var address = new Address("Rua A", "123", "Próximo", "SP", "São Paulo", "SP", new ZipCode("01000"));
+        var email = new Email("joe.doe@gmail.com");
         assertThrows(NullPointerException.class, () ->
-            new BillingInfo(fullName, null, phone, address)
+                new Billing(fullName, null, phone, email, address)
         );
     }
 
@@ -43,8 +47,9 @@ class BillingInfoTest {
         var fullName = new FullName("John", "Doe");
         var document = new Document("123");
         var address = new Address("Rua A", "123", "Próximo", "SP", "São Paulo", "SP", new ZipCode("01000"));
+        var email = new Email("joe.doe@gmail.com");
         assertThrows(NullPointerException.class, () ->
-            new BillingInfo(fullName, document, null, address)
+                new Billing(fullName, document, null, email, address)
         );
     }
 
@@ -53,8 +58,9 @@ class BillingInfoTest {
         var fullName = new FullName("John", "Doe");
         var document = new Document("123");
         var phone = new Phone("11");
+        var email = new Email("joe.doe@gmail.com");
         assertThrows(NullPointerException.class, () ->
-            new BillingInfo(fullName, document, phone, null)
+                new Billing(fullName, document, phone, email, null)
         );
     }
 
@@ -64,12 +70,14 @@ class BillingInfoTest {
         var document = new Document("123");
         var phone = new Phone("11");
         var address = new Address("Rua A", "123", "Próximo", "SP", "São Paulo", "SP", new ZipCode("01000"));
-        var billingInfo = new BillingInfo(fullName, document, phone, address);
+        var email = new Email("joe.doe@gmail.com");
+        var billingInfo = new Billing(fullName, document, phone, email, address);
         assertAll(
-            () -> assertEquals("John Doe", billingInfo.fullName().toString()),
-            () -> assertEquals("123", billingInfo.document().toString()),
-            () -> assertEquals("11", billingInfo.phone().toString()),
-            () -> assertEquals(address.toString(), billingInfo.address().toString())
+                () -> assertEquals("John Doe", billingInfo.fullName().toString()),
+                () -> assertEquals("123", billingInfo.document().toString()),
+                () -> assertEquals("11", billingInfo.phone().toString()),
+                () -> assertEquals(address.toString(), billingInfo.address().toString()),
+                () -> assertEquals(email.toString(), billingInfo.email().toString())
         );
     }
 }
