@@ -1,6 +1,5 @@
 package com.algaworks.algashop.ordering.domain.factory;
 
-import com.algaworks.algashop.ordering.domain.entity.Order;
 import com.algaworks.algashop.ordering.domain.entity.OrderTestDataBuilder;
 import com.algaworks.algashop.ordering.domain.entity.PaymentMethodEnum;
 import com.algaworks.algashop.ordering.domain.entity.ProductTestDataBuilder;
