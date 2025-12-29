@@ -61,8 +61,12 @@ public class OrderTestDataBuilder {
                 order.markAsPaid();
             }
             case READY -> {
+                order.place();
+                order.markAsPaid();
+                order.markAsReady();
             }
             case CANCELED -> {
+                order.markAsCancelled();
             }
         }
         return order;
@@ -88,6 +92,17 @@ public class OrderTestDataBuilder {
                 .phone(new Phone("123-111-9911"))
                 .email(new Email("joe.doe@gmail.com"))
                 .fullName(new FullName("Joe", "Doe"))
+                .build();
+    }
+
+    public static Billing aBillingAlt() {
+        return Billing.builder()
+                .address(anAddress())
+                .document(new Document("225-09-1992"))
+                .phone(new Phone("123-111-9911"))
+                .email(new Email("joe.doe@gmail.com"))
+                .fullName(new FullName("Joe", "Doe"))
+                .address(anAddressAlt())
                 .build();
     }
 

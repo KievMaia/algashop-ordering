@@ -2,6 +2,7 @@ package com.algaworks.algashop.ordering.domain.entity;
 
 
 import com.algaworks.algashop.ordering.domain.exception.OrderCannotBePlacedException;
+import com.algaworks.algashop.ordering.domain.exception.OrderCannotBeEditedException;
 import com.algaworks.algashop.ordering.domain.exception.OrderDoesNotContainOrderItemException;
 import com.algaworks.algashop.ordering.domain.exception.OrderInvalidShippingDeliveryDateException;
 import com.algaworks.algashop.ordering.domain.exception.OrderStatusCannotBeChangedException;
@@ -22,6 +23,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+
+import static com.algaworks.algashop.ordering.domain.entity.OrderStatusEnum.DRAFT;
 
 public class Order {
 
@@ -55,7 +58,7 @@ public class Order {
         this.setPlacedAt(placedAt);
         this.setPaidAt(paidAt);
         this.setCanceledAt(canceledAt);
-        this.setReadydAt(readydAt);
+        this.setReadyAt(readydAt);
         this.setBilling(billing);
         this.setShipping(shipping);
         this.setStatus(status);
@@ -75,13 +78,14 @@ public class Order {
                 null,
                 null,
                 null,
-                OrderStatusEnum.DRAFT,
+                DRAFT,
                 null,
                 new HashSet<>()
         );
     }
 
     public void addItem(Product product, Quantity quantity) {
+        this.verifyIfChangeable();
         Objects.requireNonNull(product);
         Objects.requireNonNull(quantity);
 
@@ -107,22 +111,35 @@ public class Order {
     }
 
     public void markAsPaid() {
-        this.setPaidAt(OffsetDateTime.now());
         this.changeStatus(OrderStatusEnum.PAID);
+        this.setPaidAt(OffsetDateTime.now());
+    }
+
+    public void markAsReady() {
+        this.changeStatus(OrderStatusEnum.READY);
+        this.setReadyAt(OffsetDateTime.now());
+    }
+
+    public void markAsCancelled() {
+        this.changeStatus(OrderStatusEnum.CANCELED);
+        this.setCanceledAt(OffsetDateTime.now());
     }
 
     public void changePaymentMethod(PaymentMethodEnum paymentMethod) {
+        this.verifyIfChangeable();
         Objects.requireNonNull(paymentMethod);
         this.setPaymentMethod(paymentMethod);
     }
 
     public void changeBilling(Billing billing) {
         Objects.requireNonNull(billing);
+        this.verifyIfChangeable();
         this.setBilling(billing);
     }
 
     public void changeShipping(Shipping newShipping) {
         Objects.requireNonNull(newShipping);
+        this.verifyIfChangeable();
 
         if (newShipping.expectedDate().isBefore(LocalDate.now())) {
             throw new OrderInvalidShippingDeliveryDateException(this.id());
@@ -135,6 +152,7 @@ public class Order {
     public void changeItemQuantity(OrderItemId orderItemId, Quantity quantity) {
         Objects.requireNonNull(orderItemId);
         Objects.requireNonNull(quantity);
+        this.verifyIfChangeable();
 
         var orderItem = this.findOrderItem(orderItemId);
         orderItem.changeQuantity(quantity);
@@ -143,7 +161,7 @@ public class Order {
     }
 
     public boolean isDraft() {
-        return OrderStatusEnum.DRAFT.equals(this.status());
+        return DRAFT.equals(this.status());
     }
 
     public boolean isPlaced() {
@@ -256,6 +274,12 @@ public class Order {
                 .orElseThrow(() -> new OrderDoesNotContainOrderItemException(this.id, orderItemId));
     }
 
+    private void verifyIfChangeable() {
+        if (!this.isDraft()){
+            throw OrderCannotBeEditedException.statusDifferentOfDraft(this.id(), this.status());
+        }
+    }
+
     private void setId(OrderId id) {
         Objects.requireNonNull(id);
         this.id = id;
@@ -288,7 +312,7 @@ public class Order {
         this.canceledAt = canceledAt;
     }
 
-    private void setReadydAt(OffsetDateTime readydAt) {
+    private void setReadyAt(OffsetDateTime readydAt) {
         this.readydAt = readydAt;
     }
 

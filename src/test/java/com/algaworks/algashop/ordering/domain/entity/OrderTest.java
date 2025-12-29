@@ -37,7 +37,7 @@ class OrderTest {
                 o -> Assertions.assertThat(o.billing()).isNull(),
                 o -> Assertions.assertThat(o.shipping()).isNull(),
                 o -> Assertions.assertThat(o.paymentMethod()).isNull()
-                );
+        );
     }
 
     @Test
