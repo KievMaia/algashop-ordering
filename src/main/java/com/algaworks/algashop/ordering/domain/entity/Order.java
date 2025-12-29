@@ -104,6 +104,14 @@ public class Order {
         this.recalculateTotals();
     }
 
+    public void removeItem(OrderItemId orderItemId) {
+        Objects.requireNonNull(orderItemId, "Order Item id is required");
+        this.verifyIfChangeable();
+        var orderItem = this.findOrderItem(orderItemId);
+        items.remove(orderItem);
+        this.recalculateTotals();
+    }
+
     public void place() {
         this.verifyIfCanChangeToPlaced();
         this.changeStatus(OrderStatusEnum.PLACED);

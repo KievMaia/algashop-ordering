@@ -1,5 +1,7 @@
 package com.algaworks.algashop.ordering.domain.entity;
 
+import com.algaworks.algashop.ordering.domain.exception.OrderCannotBeEditedException;
+import com.algaworks.algashop.ordering.domain.exception.OrderDoesNotContainOrderItemException;
 import com.algaworks.algashop.ordering.domain.exception.OrderInvalidShippingDeliveryDateException;
 import com.algaworks.algashop.ordering.domain.exception.OrderStatusCannotBeChangedException;
 import com.algaworks.algashop.ordering.domain.exception.ProductOutOfStockException;
@@ -7,6 +9,7 @@ import com.algaworks.algashop.ordering.domain.valueobject.Money;
 import com.algaworks.algashop.ordering.domain.valueobject.ProductName;
 import com.algaworks.algashop.ordering.domain.valueobject.Quantity;
 import com.algaworks.algashop.ordering.domain.valueobject.id.CustomerId;
+import com.algaworks.algashop.ordering.domain.valueobject.id.OrderItemId;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.Test;
@@ -60,6 +63,42 @@ class OrderTest {
                 (i) -> Assertions.assertThat(i.price()).isEqualTo(new Money("100")),
                 (i) -> Assertions.assertThat(i.quantity()).isEqualTo(new Quantity(1))
         );
+    }
+
+    @Test
+    public void shouldRemoveItem() {
+        var order = Order.draft(new CustomerId());
+
+        var productMouse = ProductTestDataBuilder.aProductAltMousePad().build();
+        var productMemory = ProductTestDataBuilder.aProductAltRamMemory().build();
+
+        order.addItem(productMouse, new Quantity(1));
+        order.addItem(productMemory, new Quantity(1));
+
+        Assertions.assertThat(order.items().size()).isEqualTo(2);
+        Assertions.assertThat(order.totalAmount()).isEqualTo(new Money("300"));
+
+        var orderItemId = order.items().stream().filter(item -> item.productId().equals(productMouse.id())).findFirst();
+        order.removeItem(orderItemId.get().id());
+
+        Assertions.assertThat(order.items().size()).isEqualTo(1);
+        Assertions.assertThat(order.totalAmount()).isEqualTo(new Money("200"));
+    }
+
+    @Test
+    public void shouldTryRemoveANonexistentItem() {
+        var order = Order.draft(new CustomerId());
+
+        Assertions.assertThatExceptionOfType(OrderDoesNotContainOrderItemException.class)
+                .isThrownBy(() -> order.removeItem(new OrderItemId()));
+    }
+
+    @Test
+    public void shouldTryRemoveAPlacedOrderItem() {
+        var order = OrderTestDataBuilder.anOrder().orderStatusEnum(PLACED).build();
+
+        Assertions.assertThatExceptionOfType(OrderCannotBeEditedException.class)
+                .isThrownBy(() -> order.removeItem(new OrderItemId()));
     }
 
     @Test
