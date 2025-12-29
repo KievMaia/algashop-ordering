@@ -78,7 +78,8 @@ class OrderTest {
         Assertions.assertThat(order.items().size()).isEqualTo(2);
         Assertions.assertThat(order.totalAmount()).isEqualTo(new Money("300"));
 
-        var orderItemId = order.items().stream().filter(item -> item.productId().equals(productMouse.id())).findFirst();
+        var orderItemId = order.items().stream().filter(item ->
+                item.productId().equals(productMouse.id())).findFirst();
         order.removeItem(orderItemId.get().id());
 
         Assertions.assertThat(order.items().size()).isEqualTo(1);
