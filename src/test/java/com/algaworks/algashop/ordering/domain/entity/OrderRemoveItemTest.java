@@ -14,7 +14,7 @@ import static com.algaworks.algashop.ordering.domain.entity.OrderStatusEnum.PLAC
 public class OrderRemoveItemTest {
 
     @Test
-    public void shouldRemoveItem() {
+    public void givenDraftOrder_whenRemoveItem_shouldRecalculate() {
         var order = Order.draft(new CustomerId());
 
         var productMouse = ProductTestDataBuilder.aProductAltMousePad().build();
@@ -30,16 +30,24 @@ public class OrderRemoveItemTest {
                 item.productId().equals(productMouse.id())).findFirst();
         order.removeItem(orderItemId.get().id());
 
-        Assertions.assertThat(order.items().size()).isEqualTo(1);
-        Assertions.assertThat(order.totalAmount()).isEqualTo(new Money("200"));
+        Assertions.assertWith(order,
+                (i) -> Assertions.assertThat(i.items().size()).isEqualTo(1),
+                (i) -> Assertions.assertThat(order.totalAmount()).isEqualTo(new Money("200")),
+                (i) -> Assertions.assertThat(order.totalItems()).isEqualTo(new Quantity(1))
+                );
     }
 
     @Test
     public void shouldTryRemoveANonexistentItem() {
-        var order = Order.draft(new CustomerId());
+        var order = OrderTestDataBuilder.anOrder().build();
 
         Assertions.assertThatExceptionOfType(OrderDoesNotContainOrderItemException.class)
                 .isThrownBy(() -> order.removeItem(new OrderItemId()));
+
+        Assertions.assertWith(order,
+                (i) -> Assertions.assertThat(i.totalAmount()).isEqualTo(new Money("6210.00")),
+                (i) -> Assertions.assertThat(i.totalItems()).isEqualTo(new Quantity(3))
+        );
     }
 
     @Test
@@ -48,5 +56,10 @@ public class OrderRemoveItemTest {
 
         Assertions.assertThatExceptionOfType(OrderCannotBeEditedException.class)
                 .isThrownBy(() -> order.removeItem(new OrderItemId()));
+
+        Assertions.assertWith(order,
+                (i) -> Assertions.assertThat(i.totalAmount()).isEqualTo(new Money("6210.00")),
+                (i) -> Assertions.assertThat(i.totalItems()).isEqualTo(new Quantity(3))
+        );
     }
 }
