@@ -33,7 +33,7 @@ class OrderTest {
                 o -> Assertions.assertThat(o.placedAt()).isNull(),
                 o -> Assertions.assertThat(o.paidAt()).isNull(),
                 o -> Assertions.assertThat(o.canceledAt()).isNull(),
-                o -> Assertions.assertThat(o.readydAt()).isNull(),
+                o -> Assertions.assertThat(o.readyAt()).isNull(),
                 o -> Assertions.assertThat(o.billing()).isNull(),
                 o -> Assertions.assertThat(o.shipping()).isNull(),
                 o -> Assertions.assertThat(o.paymentMethod()).isNull()
@@ -92,7 +92,7 @@ class OrderTest {
     }
 
     @Test
-    public void givenPlacedOrder_WhenMarkAsPaid_SouldChangeToPaid() {
+    public void givenPlacedOrder_WhenMarkAsPaid_ShouldChangeToPaid() {
         var order = OrderTestDataBuilder.anOrder().orderStatusEnum(PLACED).build();
         order.markAsPaid();
         Assertions.assertThat(order.isPaid()).isTrue();

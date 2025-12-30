@@ -37,7 +37,7 @@ public class Order {
     private OffsetDateTime placedAt;
     private OffsetDateTime paidAt;
     private OffsetDateTime canceledAt;
-    private OffsetDateTime readydAt;
+    private OffsetDateTime readyAt;
 
     private Billing billing;
     private Shipping shipping;
@@ -49,7 +49,7 @@ public class Order {
 
     @Builder(builderClassName = "ExistingOrderBuilder", builderMethodName = "existing")
     public Order(OrderId id, CustomerId customerId, Money totalAmount, Quantity totalItems, OffsetDateTime placedAt,
-                 OffsetDateTime paidAt, OffsetDateTime canceledAt, OffsetDateTime readydAt, Billing billing,
+                 OffsetDateTime paidAt, OffsetDateTime canceledAt, OffsetDateTime readyAt, Billing billing,
                  Shipping shipping, OrderStatusEnum status, PaymentMethodEnum paymentMethod, Set<OrderItem> items) {
         this.setId(id);
         this.setCustomerId(customerId);
@@ -58,7 +58,7 @@ public class Order {
         this.setPlacedAt(placedAt);
         this.setPaidAt(paidAt);
         this.setCanceledAt(canceledAt);
-        this.setReadyAt(readydAt);
+        this.setReadyAt(readyAt);
         this.setBilling(billing);
         this.setShipping(shipping);
         this.setStatus(status);
@@ -208,8 +208,8 @@ public class Order {
         return canceledAt;
     }
 
-    public OffsetDateTime readydAt() {
-        return readydAt;
+    public OffsetDateTime readyAt() {
+        return readyAt;
     }
 
     public Billing billing() {
@@ -321,7 +321,7 @@ public class Order {
     }
 
     private void setReadyAt(OffsetDateTime readydAt) {
-        this.readydAt = readydAt;
+        this.readyAt = readydAt;
     }
 
     private void setBilling(Billing billing) {
