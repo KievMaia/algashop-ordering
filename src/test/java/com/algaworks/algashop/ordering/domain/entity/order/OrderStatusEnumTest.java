@@ -1,5 +1,6 @@
-package com.algaworks.algashop.ordering.domain.entity;
+package com.algaworks.algashop.ordering.domain.entity.order;
 
+import com.algaworks.algashop.ordering.domain.entity.OrderStatusEnum;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 

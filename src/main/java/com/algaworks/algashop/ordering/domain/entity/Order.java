@@ -21,9 +21,11 @@ import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import static com.algaworks.algashop.ordering.domain.entity.OrderStatusEnum.CANCELED;
 import static com.algaworks.algashop.ordering.domain.entity.OrderStatusEnum.DRAFT;
 
 public class Order {
@@ -174,6 +176,10 @@ public class Order {
 
     public boolean isPlaced() {
         return OrderStatusEnum.PLACED.equals(this.status());
+    }
+
+    public boolean isCanceled() {
+        return OrderStatusEnum.CANCELED.equals(this.status());
     }
 
     public boolean isPaid() {

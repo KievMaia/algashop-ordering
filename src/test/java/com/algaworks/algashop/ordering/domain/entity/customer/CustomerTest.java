@@ -1,4 +1,4 @@
-package com.algaworks.algashop.ordering.domain.entity;
+package com.algaworks.algashop.ordering.domain.entity.customer;
 
 import com.algaworks.algashop.ordering.domain.exception.CustomerArchivedException;
 import com.algaworks.algashop.ordering.domain.valueobject.*;
@@ -34,13 +34,13 @@ class CustomerTest {
         customer.archived();
 
         Assertions.assertWith(customer,
-                c -> assertThat(c.fullName()).isEqualTo(new FullName("Anonymous", "Anonymous")),
-                c -> assertThat(c.email()).isNotEqualTo(new Email("john.doe@gmail.com")),
-                c -> assertThat(c.phone()).isEqualTo(new Phone("000-000-0000")),
-                c -> assertThat(c.document()).isEqualTo(new Document("000-000-0000")),
-                c -> assertThat(c.birthDate()).isNull(),
-                c -> assertThat(c.isPromotionNotificationsAllowed()).isFalse(),
-                c -> assertThat(c.address()).isEqualTo(
+                c -> Assertions.assertThat(c.fullName()).isEqualTo(new FullName("Anonymous", "Anonymous")),
+                c -> Assertions.assertThat(c.email()).isNotEqualTo(new Email("john.doe@gmail.com")),
+                c -> Assertions.assertThat(c.phone()).isEqualTo(new Phone("000-000-0000")),
+                c -> Assertions.assertThat(c.document()).isEqualTo(new Document("000-000-0000")),
+                c -> Assertions.assertThat(c.birthDate()).isNull(),
+                c -> Assertions.assertThat(c.isPromotionNotificationsAllowed()).isFalse(),
+                c -> Assertions.assertThat(c.address()).isEqualTo(
                         Address.builder()
                         .street("Bourbon Street")
                         .number("Anonymized")
@@ -80,7 +80,7 @@ class CustomerTest {
         customer.addLoyaltyPoints(new LoyaltyPoints(10));
         customer.addLoyaltyPoints(new LoyaltyPoints(20));
 
-        assertThat(customer.loyaltyPoints().value()).isEqualTo(new LoyaltyPoints(30).value());
+        Assertions.assertThat(customer.loyaltyPoints().value()).isEqualTo(new LoyaltyPoints(30).value());
     }
 
     @Test

@@ -1,5 +1,6 @@
-package com.algaworks.algashop.ordering.domain.entity;
+package com.algaworks.algashop.ordering.domain.entity.customer;
 
+import com.algaworks.algashop.ordering.domain.entity.Customer;
 import com.algaworks.algashop.ordering.domain.valueobject.*;
 import com.algaworks.algashop.ordering.domain.valueobject.id.CustomerId;
 

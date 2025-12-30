@@ -1,5 +1,9 @@
-package com.algaworks.algashop.ordering.domain.entity;
+package com.algaworks.algashop.ordering.domain.entity.order;
 
+import com.algaworks.algashop.ordering.domain.entity.Order;
+import com.algaworks.algashop.ordering.domain.entity.OrderStatusEnum;
+import com.algaworks.algashop.ordering.domain.entity.PaymentMethodEnum;
+import com.algaworks.algashop.ordering.domain.entity.product.ProductTestDataBuilder;
 import com.algaworks.algashop.ordering.domain.valueobject.Address;
 import com.algaworks.algashop.ordering.domain.valueobject.Billing;
 import com.algaworks.algashop.ordering.domain.valueobject.Document;

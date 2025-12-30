@@ -1,8 +1,8 @@
 package com.algaworks.algashop.ordering.domain.factory;
 
-import com.algaworks.algashop.ordering.domain.entity.OrderTestDataBuilder;
+import com.algaworks.algashop.ordering.domain.entity.order.OrderTestDataBuilder;
 import com.algaworks.algashop.ordering.domain.entity.PaymentMethodEnum;
-import com.algaworks.algashop.ordering.domain.entity.ProductTestDataBuilder;
+import com.algaworks.algashop.ordering.domain.entity.product.ProductTestDataBuilder;
 import com.algaworks.algashop.ordering.domain.valueobject.Quantity;
 import com.algaworks.algashop.ordering.domain.valueobject.id.CustomerId;
 import org.assertj.core.api.Assertions;

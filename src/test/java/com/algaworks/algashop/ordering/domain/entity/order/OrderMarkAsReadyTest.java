@@ -1,4 +1,4 @@
-package com.algaworks.algashop.ordering.domain.entity;
+package com.algaworks.algashop.ordering.domain.entity.order;
 
 import com.algaworks.algashop.ordering.domain.exception.OrderStatusCannotBeChangedException;
 import org.assertj.core.api.Assertions;

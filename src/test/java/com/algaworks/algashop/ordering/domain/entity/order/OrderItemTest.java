@@ -1,5 +1,7 @@
-package com.algaworks.algashop.ordering.domain.entity;
+package com.algaworks.algashop.ordering.domain.entity.order;
 
+import com.algaworks.algashop.ordering.domain.entity.OrderItem;
+import com.algaworks.algashop.ordering.domain.entity.product.ProductTestDataBuilder;
 import com.algaworks.algashop.ordering.domain.valueobject.Quantity;
 import com.algaworks.algashop.ordering.domain.valueobject.id.OrderId;
 import org.assertj.core.api.Assertions;
