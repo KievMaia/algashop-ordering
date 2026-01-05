@@ -10,7 +10,7 @@ public record Quantity(Integer value) implements Comparable<Quantity> {
 
     public Quantity {
         Objects.requireNonNull(value);
-        if (value < 0) {
+        if (value == 0) {
             throw new IllegalArgumentException(ErrorMessages.VALIDATION_NEGATIVE_VALUE);
         }
     }

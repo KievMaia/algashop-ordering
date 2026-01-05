@@ -21,11 +21,9 @@ import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import static com.algaworks.algashop.ordering.domain.entity.OrderStatusEnum.CANCELED;
 import static com.algaworks.algashop.ordering.domain.entity.OrderStatusEnum.DRAFT;
 
 public class Order {
@@ -50,7 +48,7 @@ public class Order {
     private Set<OrderItem> items;
 
     @Builder(builderClassName = "ExistingOrderBuilder", builderMethodName = "existing")
-    public Order(OrderId id, CustomerId customerId, Money totalAmount, Quantity totalItems, OffsetDateTime placedAt,
+    private Order(OrderId id, CustomerId customerId, Money totalAmount, Quantity totalItems, OffsetDateTime placedAt,
                  OffsetDateTime paidAt, OffsetDateTime canceledAt, OffsetDateTime readyAt, Billing billing,
                  Shipping shipping, OrderStatusEnum status, PaymentMethodEnum paymentMethod, Set<OrderItem> items) {
         this.setId(id);

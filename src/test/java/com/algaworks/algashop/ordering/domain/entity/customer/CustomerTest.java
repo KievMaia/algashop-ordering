@@ -5,7 +5,6 @@ import com.algaworks.algashop.ordering.domain.valueobject.*;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 class CustomerTest {
@@ -22,9 +21,7 @@ class CustomerTest {
         var customer = CustomerTestDataBuilder.brandNewCustomer().build();
 
         assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() -> {
-                    customer.changeEmail(new Email("invalid"));
-                });
+                .isThrownBy(() -> customer.changeEmail(new Email("invalid")));
     }
 
     @Test

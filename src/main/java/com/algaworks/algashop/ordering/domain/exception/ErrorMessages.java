@@ -28,6 +28,10 @@ public class ErrorMessages {
     public static final String ERROR_ORDER_CANNOT_BE_PLACED_HAS_NO_PAYMENT_METHOD = "Order %s cannot be placed, it has no payment method";
     public static final String ERROR_ORDER_CANNOT_BE_EDITED = "Order %s with status %s cannot be edited";
 
+    public static final String ERROR_REFRESH_INCOMPATIBLE_PRODUCT = "Refresh not possible, product %s incompatible.";
+
+    public static final String ERROR_SHOPPING_ITEM_CART_DOES_NOT_CONTAIN_ITEM = "The item ID %s in the shopping cart does not exist."
+
     public static final String ERROR_ORDER_DOES_NOT_CONTAIN_ITEM = "Order %s doesn't contain item %s";
 
     public static final String ERROR_PRODUCT_ID_OUT_OF_STOCK = "Product %s is out of stock";
