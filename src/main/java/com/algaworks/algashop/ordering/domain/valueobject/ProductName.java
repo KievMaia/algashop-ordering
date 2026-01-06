@@ -11,6 +11,10 @@ public record ProductName(String name) {
         name = name.trim();
     }
 
+    public static ProductName of(String value) {
+        return new ProductName(value);
+    }
+
     @Override
     public String toString() {
         return name;

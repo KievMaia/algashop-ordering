@@ -14,6 +14,10 @@ public record Money(BigDecimal value) implements Comparable<Money> {
         this(new BigDecimal(value));
     }
 
+    public static Money of(String value) {
+        return new Money(new BigDecimal(value));
+    }
+
     public Money(BigDecimal value) {
         Objects.requireNonNull(value); //todo mensagem
         this.value = value.setScale(2, roundingMode);
