@@ -1,13 +1,11 @@
 package com.algaworks.algashop.ordering.domain.entity.shoppingcart;
 
 import com.algaworks.algashop.ordering.domain.entity.ShoppingCart;
-import com.algaworks.algashop.ordering.domain.entity.ShoppingCartItem;
 import com.algaworks.algashop.ordering.domain.entity.product.ProductTestDataBuilder;
 import com.algaworks.algashop.ordering.domain.exception.ProductOutOfStockException;
 import com.algaworks.algashop.ordering.domain.exception.ShoppingCartDoesNotContainItemException;
 import com.algaworks.algashop.ordering.domain.exception.ShoppingCartDoesNotContainProductException;
 import com.algaworks.algashop.ordering.domain.valueobject.Money;
-import com.algaworks.algashop.ordering.domain.valueobject.Product;
 import com.algaworks.algashop.ordering.domain.valueobject.Quantity;
 import com.algaworks.algashop.ordering.domain.valueobject.id.CustomerId;
 import com.algaworks.algashop.ordering.domain.valueobject.id.ShoppingCartItemId;
