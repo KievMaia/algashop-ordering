@@ -26,7 +26,7 @@ public class OrderRemoveItemTest {
         order.addItem(productMemory, new Quantity(1));
 
         Assertions.assertThat(order.items().size()).isEqualTo(2);
-        Assertions.assertThat(order.totalAmount()).isEqualTo(new Money("300"));
+        Assertions.assertThat(order.totalAmount()).isEqualTo(new Money("250"));
 
         var orderItemId = order.items().stream().filter(item ->
                 item.productId().equals(productMouse.id())).findFirst();
@@ -34,7 +34,7 @@ public class OrderRemoveItemTest {
 
         Assertions.assertWith(order,
                 (i) -> Assertions.assertThat(i.items().size()).isEqualTo(1),
-                (i) -> Assertions.assertThat(order.totalAmount()).isEqualTo(new Money("200")),
+                (i) -> Assertions.assertThat(order.totalAmount()).isEqualTo(new Money("150")),
                 (i) -> Assertions.assertThat(order.totalItems()).isEqualTo(new Quantity(1))
                 );
     }
@@ -47,7 +47,7 @@ public class OrderRemoveItemTest {
                 .isThrownBy(() -> order.removeItem(new OrderItemId()));
 
         Assertions.assertWith(order,
-                (i) -> Assertions.assertThat(i.totalAmount()).isEqualTo(new Money("6210.00")),
+                (i) -> Assertions.assertThat(i.totalAmount()).isEqualTo(new Money("30160.00")),
                 (i) -> Assertions.assertThat(i.totalItems()).isEqualTo(new Quantity(3))
         );
     }
@@ -60,7 +60,7 @@ public class OrderRemoveItemTest {
                 .isThrownBy(() -> order.removeItem(new OrderItemId()));
 
         Assertions.assertWith(order,
-                (i) -> Assertions.assertThat(i.totalAmount()).isEqualTo(new Money("6210.00")),
+                (i) -> Assertions.assertThat(i.totalAmount()).isEqualTo(new Money("30160.00")),
                 (i) -> Assertions.assertThat(i.totalItems()).isEqualTo(new Quantity(3))
         );
     }

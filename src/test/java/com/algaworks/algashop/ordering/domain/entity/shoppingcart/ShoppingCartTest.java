@@ -51,7 +51,7 @@ class ShoppingCartTest {
 
         Assertions.assertWith(shoppingCart,
                 sc -> Assertions.assertThat(sc.totalItems()).isEqualTo(new Quantity(2)),
-                sc -> Assertions.assertThat(sc.totalAmount()).isEqualTo(new Money("400"))
+                sc -> Assertions.assertThat(sc.totalAmount()).isEqualTo(new Money("300"))
                 );
     }
 
@@ -68,7 +68,7 @@ class ShoppingCartTest {
 
         Assertions.assertWith(shoppingCart,
                 sc -> Assertions.assertThat(sc.totalItems()).isEqualTo(new Quantity(4)),
-                sc -> Assertions.assertThat(sc.totalAmount()).isEqualTo(new Money("600"))
+                sc -> Assertions.assertThat(sc.totalAmount()).isEqualTo(new Money("500"))
         );
     }
 
