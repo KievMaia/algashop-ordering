@@ -1,6 +1,7 @@
 package com.algaworks.algashop.ordering.domain.entity;
 
 import com.algaworks.algashop.ordering.domain.exception.ShoppingCartDoesNotContainItemException;
+import com.algaworks.algashop.ordering.domain.exception.ShoppingCartDoesNotContainProductException;
 import com.algaworks.algashop.ordering.domain.valueobject.Money;
 import com.algaworks.algashop.ordering.domain.valueobject.Product;
 import com.algaworks.algashop.ordering.domain.valueobject.Quantity;
@@ -81,10 +82,11 @@ public class ShoppingCart implements Serializable {
     }
 
     public ShoppingCartItem findItem(ProductId productId) {
+        Objects.requireNonNull(productId);
         return this.items.stream()
-                .filter(item -> item.productId().equals(productId))
+                .filter(i -> i.productId().equals(productId))
                 .findFirst()
-                .orElse(null);
+                .orElseThrow(() -> new ShoppingCartDoesNotContainProductException(this.id(), productId));
     }
 
     private ShoppingCartItem findShoppingCartItem(ShoppingCartItemId shoppingCartItemId) {

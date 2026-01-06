@@ -1,9 +1,12 @@
 package com.algaworks.algashop.ordering.domain.exception;
 
+import java.util.Locale;
+
 public class ErrorMessages {
 
     private ErrorMessages() {
     }
+
 
 
     public static final String VALIDATION_ERROR_BIRTHDATE_MUST_IN_PAST = "BirthDate must be a past date";
@@ -31,6 +34,7 @@ public class ErrorMessages {
     public static final String ERROR_REFRESH_INCOMPATIBLE_PRODUCT = "Refresh not possible, product %s incompatible.";
 
     public static final String ERROR_SHOPPING_ITEM_CART_DOES_NOT_CONTAIN_ITEM = "The item ID %s in the shopping cart does not exist.";
+    public static final String ERROR_SHOPPING_CART_DOES_NOT_CONTAIN_PRODUCT = "Shopping Cart %s does not contain product %s";
 
     public static final String ERROR_ORDER_DOES_NOT_CONTAIN_ITEM = "Order %s doesn't contain item %s";
 

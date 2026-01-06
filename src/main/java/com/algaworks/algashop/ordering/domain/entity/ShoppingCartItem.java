@@ -25,7 +25,7 @@ public class ShoppingCartItem implements Serializable {
     private Boolean available;
 
     @Builder(builderClassName = "ExistingShoppingCartItemBuilder", builderMethodName = "existing")
-    private ShoppingCartItem(ShoppingCartItemId id, ShoppingCartId shoppingCartId, ProductId productId, ProductName productName,
+    public ShoppingCartItem(ShoppingCartItemId id, ShoppingCartId shoppingCartId, ProductId productId, ProductName productName,
                              Money price, Quantity quantity, Money totalAmount, Boolean available) {
         this.setId(id);
         this.setShoppingCartId(shoppingCartId);
@@ -38,9 +38,8 @@ public class ShoppingCartItem implements Serializable {
     }
 
     @Builder(builderClassName = "BrandNewShoppingCartItemBuild", builderMethodName = "brandNew")
-    private static ShoppingCartItem createBrandNew(ShoppingCartId shoppingCartId, Product product, Quantity quantity,
-                                                   Boolean available) {
-        return new ShoppingCartItem(
+    public ShoppingCartItem (ShoppingCartId shoppingCartId, Product product, Quantity quantity) {
+        this(
                 new ShoppingCartItemId(),
                 shoppingCartId,
                 product.id(),
@@ -48,8 +47,10 @@ public class ShoppingCartItem implements Serializable {
                 product.price(),
                 quantity,
                 Money.ZERO,
-                available
+                product.inStock()
         );
+
+        this.recalculateTotals();
     }
 
     void refresh(Product product) {
@@ -63,16 +64,16 @@ public class ShoppingCartItem implements Serializable {
         this.setPrice(product.price());
         this.setAvailable(product.inStock());
         this.setProductName(product.name());
-        this.recalculateTotal();
+        this.recalculateTotals();
     }
 
     void changeQuantity(Quantity quantity) {
         Objects.requireNonNull(quantity);
         this.setQuantity(quantity);
-        this.recalculateTotal();
+        this.recalculateTotals();
     }
 
-    private void recalculateTotal() {
+    private void recalculateTotals() {
         this.setTotalAmount(this.price.multiply(quantity));
     }
 
