@@ -11,7 +11,6 @@ import com.algaworks.algashop.ordering.domain.model.valueobject.id.ShoppingCartI
 import com.algaworks.algashop.ordering.domain.model.valueobject.id.ShoppingCartItemId;
 import lombok.Builder;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.Collections;
@@ -20,7 +19,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
-public class ShoppingCart implements Serializable {
+public class ShoppingCart implements AggregateRoot<ShoppingCartId> {
 
     private ShoppingCartId id;
     private CustomerId customerId;

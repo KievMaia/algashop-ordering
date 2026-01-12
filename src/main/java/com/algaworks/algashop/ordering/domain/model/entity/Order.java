@@ -26,7 +26,7 @@ import java.util.Set;
 
 import static com.algaworks.algashop.ordering.domain.model.entity.OrderStatusEnum.DRAFT;
 
-public class Order {
+public class Order implements AggregateRoot<OrderId> {
 
     private OrderId id;
     private CustomerId customerId;

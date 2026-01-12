@@ -11,14 +11,13 @@ import com.algaworks.algashop.ordering.domain.model.valueobject.Phone;
 import com.algaworks.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import lombok.Builder;
 
-import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
 import static com.algaworks.algashop.ordering.domain.model.exception.ErrorMessages.*;
 
-public class Customer implements Serializable {
+public class Customer implements AggregateRoot<CustomerId> {
     private CustomerId id;
     private FullName fullName;
     private BirthDate birthDate;
