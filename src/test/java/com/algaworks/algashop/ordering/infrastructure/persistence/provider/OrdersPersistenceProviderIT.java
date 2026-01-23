@@ -21,8 +21,8 @@ import org.springframework.context.annotation.Import;
 })
 class OrdersPersistenceProviderIT {
 
-    private OrdersPersistenceProvider persistenceProvider;
-    private OrderPersistenceEntityRepository entityRepository;
+    private final OrdersPersistenceProvider persistenceProvider;
+    private final OrderPersistenceEntityRepository entityRepository;
 
     @Autowired
     public OrdersPersistenceProviderIT(OrdersPersistenceProvider persistenceProvider, OrderPersistenceEntityRepository entityRepository) {

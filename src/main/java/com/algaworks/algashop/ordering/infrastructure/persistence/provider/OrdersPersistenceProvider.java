@@ -35,12 +35,8 @@ public class OrdersPersistenceProvider implements Orders {
     public void add(Order aggregateRoot) {
         var orderId = aggregateRoot.id().value().toLong();
         persistenceRepository.findById(orderId).ifPresentOrElse(
-                (persistenceEntity) -> {
-                    this.update(aggregateRoot, persistenceEntity);
-                },
-                () -> {
-                    this.insert(aggregateRoot);
-                }
+                (persistenceEntity) -> this.update(aggregateRoot, persistenceEntity),
+                () -> this.insert(aggregateRoot)
         );
         var persistenceEntity = assembler.fromDomain(aggregateRoot);
         persistenceRepository.saveAndFlush(persistenceEntity);
