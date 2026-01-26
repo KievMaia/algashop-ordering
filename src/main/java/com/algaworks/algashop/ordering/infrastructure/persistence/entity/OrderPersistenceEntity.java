@@ -1,5 +1,8 @@
 package com.algaworks.algashop.ordering.infrastructure.persistence.entity;
 
+import com.algaworks.algashop.ordering.infrastructure.persistence.embeddable.BillingEmbeddable;
+import com.algaworks.algashop.ordering.infrastructure.persistence.embeddable.ShippingEmbeddable;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.Id;
@@ -57,5 +60,11 @@ public class OrderPersistenceEntity {
 
     @Version
     private Long version;
+
+    @Embedded
+    private BillingEmbeddable billing;
+
+    @Embedded
+    private ShippingEmbeddable shipping;
 
 }
