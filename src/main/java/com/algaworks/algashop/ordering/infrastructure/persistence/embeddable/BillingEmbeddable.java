@@ -16,6 +16,7 @@ public class BillingEmbeddable {
     private String firstName;
     private String lastName;
     private String document;
+    private String email;
     private String phone;
 
     @Embedded
