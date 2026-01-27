@@ -2,13 +2,17 @@ package com.algaworks.algashop.ordering.infrastructure.persistence.entity;
 
 import com.algaworks.algashop.ordering.infrastructure.persistence.embeddable.BillingEmbeddable;
 import com.algaworks.algashop.ordering.infrastructure.persistence.embeddable.ShippingEmbeddable;
+import jakarta.persistence.AttributeOverride;
+import jakarta.persistence.AttributeOverrides;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -22,14 +26,16 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
+
+import static jakarta.persistence.CascadeType.ALL;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @ToString(of = "id")
 @Table(name = "\"order\"")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -62,9 +68,84 @@ public class OrderPersistenceEntity {
     private Long version;
 
     @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "firstName", column = @Column(name = "billing_first_name")),
+            @AttributeOverride(name = "lastName", column = @Column(name = "billing_last_name")),
+            @AttributeOverride(name = "document", column = @Column(name = "billing_document")),
+            @AttributeOverride(name = "email", column = @Column(name = "billing_email")),
+            @AttributeOverride(name = "phone", column = @Column(name = "billing_phone")),
+            @AttributeOverride(name = "address.street", column = @Column(name = "billing_address_street")),
+            @AttributeOverride(name = "address.number", column = @Column(name = "billing_address_number")),
+            @AttributeOverride(name = "address.complement", column = @Column(name = "billing_address_complement")),
+            @AttributeOverride(name = "address.neighborhood", column = @Column(name = "billing_address_neighborhood")),
+            @AttributeOverride(name = "address.city", column = @Column(name = "billing_address_city")),
+            @AttributeOverride(name = "address.state", column = @Column(name = "billing_address_state")),
+            @AttributeOverride(name = "address.zipcode", column = @Column(name = "billing_address_zipcode"))
+    })
     private BillingEmbeddable billing;
 
     @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "cost", column = @Column(name = "shipping_cost")),
+            @AttributeOverride(name = "expectedDate", column = @Column(name = "shipping_expected_date")),
+            @AttributeOverride(name = "address.street", column = @Column(name = "shipping_address_street")),
+            @AttributeOverride(name = "address.number", column = @Column(name = "shipping_address_number")),
+            @AttributeOverride(name = "address.complement", column = @Column(name = "shipping_address_complement")),
+            @AttributeOverride(name = "address.neighborhood", column = @Column(name = "shipping_address_neighborhood")),
+            @AttributeOverride(name = "address.city", column = @Column(name = "shipping_address_city")),
+            @AttributeOverride(name = "address.state", column = @Column(name = "shipping_address_state")),
+            @AttributeOverride(name = "address.zipcode", column = @Column(name = "shipping_address_zipcode")),
+            @AttributeOverride(name = "recipient.firstName", column = @Column(name = "shipping_recipient_first_name")),
+            @AttributeOverride(name = "recipient.lastName", column = @Column(name = "shipping_recipient_last_name")),
+            @AttributeOverride(name = "recipient.document", column = @Column(name = "shipping_recipient_document")),
+            @AttributeOverride(name = "recipient.phone", column = @Column(name = "shipping_recipient_phone"))
+    })
     private ShippingEmbeddable shipping;
 
+    @OneToMany(mappedBy = "order", cascade = ALL)
+    private Set<OrderItemPersistenceEntity> items = new HashSet<>();
+
+    @Builder
+    public OrderPersistenceEntity(Long id, UUID customerId, BigDecimal totalAmount, Integer totalItems, String status, String paymentMethod, OffsetDateTime placedAt, OffsetDateTime paidAt, OffsetDateTime canceledAt, OffsetDateTime readyAt, UUID createdByUserId, OffsetDateTime lastModifiedAt, UUID lastModifiedByUserId, Long version, BillingEmbeddable billing, ShippingEmbeddable shipping, Set<OrderItemPersistenceEntity> items) {
+        this.id = id;
+        this.customerId = customerId;
+        this.totalAmount = totalAmount;
+        this.totalItems = totalItems;
+        this.status = status;
+        this.paymentMethod = paymentMethod;
+        this.placedAt = placedAt;
+        this.paidAt = paidAt;
+        this.canceledAt = canceledAt;
+        this.readyAt = readyAt;
+        this.createdByUserId = createdByUserId;
+        this.lastModifiedAt = lastModifiedAt;
+        this.lastModifiedByUserId = lastModifiedByUserId;
+        this.version = version;
+        this.billing = billing;
+        this.shipping = shipping;
+        this.replaceItems(items);
+    }
+
+    public void replaceItems(Set<OrderItemPersistenceEntity> items) {
+        if (items == null || items.isEmpty()) {
+            this.setItems(new HashSet<>());
+            return;
+        }
+
+        items.forEach(i -> i.setOrder(this));
+        this.setItems(items);
+    }
+
+    public void addItem(OrderItemPersistenceEntity item) {
+        if (item == null) {
+            return;
+        }
+
+        if (this.getItems() == null) {
+            this.setItems(new HashSet<>());
+        }
+
+        item.setOrder(this);
+        this.getItems().add(item);
+    }
 }
