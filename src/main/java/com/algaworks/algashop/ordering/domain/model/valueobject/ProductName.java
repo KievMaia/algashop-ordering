@@ -2,13 +2,13 @@ package com.algaworks.algashop.ordering.domain.model.valueobject;
 
 import java.util.Objects;
 
-public record ProductName(String name) {
+public record ProductName(String value) {
     public ProductName {
-        Objects.requireNonNull(name);
-        if (name.isBlank()) {
+        Objects.requireNonNull(value);
+        if (value.isBlank()) {
             throw new IllegalArgumentException("Name must not be blank");
         }
-        name = name.trim();
+        value = value.trim();
     }
 
     public static ProductName of(String value) {
@@ -17,6 +17,6 @@ public record ProductName(String name) {
 
     @Override
     public String toString() {
-        return name;
+        return value;
     }
 }

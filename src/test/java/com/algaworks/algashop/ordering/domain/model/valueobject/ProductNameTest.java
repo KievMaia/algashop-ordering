@@ -9,14 +9,14 @@ class ProductNameTest {
     @Test
     void shouldCreateProductNameWithValidValue() {
         var productName = new ProductName("TV Smart");
-        assertEquals("TV Smart", productName.name());
+        assertEquals("TV Smart", productName.value());
         assertEquals("TV Smart", productName.toString());
     }
 
     @Test
     void shouldTrimValueWhenCreatingProductName() {
         var productName = new ProductName("  Geladeira  ");
-        assertEquals("Geladeira", productName.name());
+        assertEquals("Geladeira", productName.value());
         assertEquals("Geladeira", productName.toString());
     }
 
