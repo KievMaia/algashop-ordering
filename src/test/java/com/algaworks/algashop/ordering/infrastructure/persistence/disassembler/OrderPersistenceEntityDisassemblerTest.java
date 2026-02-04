@@ -34,4 +34,14 @@ class OrderPersistenceEntityDisassemblerTest {
         );
     }
 
+    @Test
+    public void shouldConvertFromDomainEntity() {
+        var persistenceEntity = OrderPersistenceEntityTestDataBuilder.existingOrder().build();
+
+        var domainEntity = disassembler.toDomainEntity(persistenceEntity);
+
+        Assertions.assertThat(domainEntity.items()).isNotEmpty();
+        Assertions.assertThat(domainEntity.items()).hasSize(2);
+    }
+
 }
