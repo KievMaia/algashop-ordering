@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
 
-import java.lang.reflect.Field;
 import java.util.Optional;
 
 @Component
@@ -48,42 +47,34 @@ public class OrdersPersistenceProvider implements Orders {
     public void add(Order aggregateRoot) {
         var orderId = aggregateRoot.id().value().toLong();
         persistenceRepository.findById(orderId).ifPresentOrElse(
-                (persistenceEntity) -> {
-                    try {
-                        this.update(aggregateRoot, persistenceEntity);
-                    } catch (NoSuchFieldException e) {
-                        throw new RuntimeException(e);
-                    }
-                },
-                () -> {
-                    try {
-                        this.insert(aggregateRoot);
-                    } catch (NoSuchFieldException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
+                (persistenceEntity) -> this.update(aggregateRoot, persistenceEntity),
+                () -> this.insert(aggregateRoot)
         );
         var persistenceEntity = assembler.fromDomain(aggregateRoot);
         persistenceRepository.saveAndFlush(persistenceEntity);
     }
 
-    private void insert(Order aggregateRoot) throws NoSuchFieldException {
+    private void insert(Order aggregateRoot) {
         var persistenceEntity = assembler.fromDomain(aggregateRoot);
         persistenceRepository.saveAndFlush(persistenceEntity);
         updateVersion(aggregateRoot,  persistenceEntity);
     }
 
-    private void update(Order aggregateRoot, OrderPersistenceEntity persistenceEntity) throws NoSuchFieldException {
+    private void update(Order aggregateRoot, OrderPersistenceEntity persistenceEntity) {
         persistenceEntity = assembler.merge(persistenceEntity, aggregateRoot);
         entityManager.detach(persistenceEntity);
         persistenceEntity = persistenceRepository.saveAndFlush(persistenceEntity);
         updateVersion(aggregateRoot, persistenceEntity);
     }
 
-    private void updateVersion(Order aggregateRoot, OrderPersistenceEntity persistenceEntity) throws NoSuchFieldException {
-        Field version = aggregateRoot.getClass().getDeclaredField("version");
-        version.setAccessible(true);
-        ReflectionUtils.setField(version, aggregateRoot, persistenceEntity.getVersion());
-        version.setAccessible(false);
+    private void updateVersion(Order aggregateRoot, OrderPersistenceEntity persistenceEntity) {
+        try {
+            var version = aggregateRoot.getClass().getDeclaredField("version");
+            version.setAccessible(true);
+            ReflectionUtils.setField(version, aggregateRoot, persistenceEntity.getVersion());
+            version.setAccessible(false);
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
