@@ -80,7 +80,7 @@ public class OrderPersistenceEntity {
             @AttributeOverride(name = "address.neighborhood", column = @Column(name = "billing_address_neighborhood")),
             @AttributeOverride(name = "address.city", column = @Column(name = "billing_address_city")),
             @AttributeOverride(name = "address.state", column = @Column(name = "billing_address_state")),
-            @AttributeOverride(name = "address.zipcode", column = @Column(name = "billing_address_zipcode"))
+            @AttributeOverride(name = "address.zipCode", column = @Column(name = "billing_address_zipCode"))
     })
     private BillingEmbeddable billing;
 
@@ -94,7 +94,7 @@ public class OrderPersistenceEntity {
             @AttributeOverride(name = "address.neighborhood", column = @Column(name = "shipping_address_neighborhood")),
             @AttributeOverride(name = "address.city", column = @Column(name = "shipping_address_city")),
             @AttributeOverride(name = "address.state", column = @Column(name = "shipping_address_state")),
-            @AttributeOverride(name = "address.zipcode", column = @Column(name = "shipping_address_zipcode")),
+            @AttributeOverride(name = "address.zipCode", column = @Column(name = "shipping_address_zipCode")),
             @AttributeOverride(name = "recipient.firstName", column = @Column(name = "shipping_recipient_first_name")),
             @AttributeOverride(name = "recipient.lastName", column = @Column(name = "shipping_recipient_last_name")),
             @AttributeOverride(name = "recipient.document", column = @Column(name = "shipping_recipient_document")),

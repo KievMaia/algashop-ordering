@@ -93,7 +93,7 @@ public class OrderPersistenceEntityDisassembler {
                 address.getNumber(),
                 address.getCity(),
                 address.getState(),
-                new ZipCode(address.getZipcode()));
+                new ZipCode(address.getZipCode()));
     }
 
 

@@ -14,6 +14,7 @@ import com.algaworks.algashop.ordering.infrastructure.persistence.entity.OrderPe
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -38,45 +39,44 @@ public class OrderPersistenceEntityAssembler {
         orderPersistenceEntity.setVersion(order.version());
         orderPersistenceEntity.setBilling(toBillingEmbeddable(order.billing()));
         orderPersistenceEntity.setShipping(toShippingEmbeddable(order.shipping()));
-        var mergedItems = mergeItems(order, orderPersistenceEntity);
-        orderPersistenceEntity.setItems(mergedItems);
+        Set<OrderItemPersistenceEntity> mergedItems = mergeItems(order, orderPersistenceEntity);
+        orderPersistenceEntity.replaceItems(mergedItems);
         return orderPersistenceEntity;
     }
 
     private Set<OrderItemPersistenceEntity> mergeItems(Order order, OrderPersistenceEntity orderPersistenceEntity) {
-        var newOrUpdatedItems = order.items();
+        Set<OrderItem> newOrUpdatedItems = order.items();
 
         if (newOrUpdatedItems == null || newOrUpdatedItems.isEmpty()) {
             return new HashSet<>();
         }
 
-        var existingItems = orderPersistenceEntity.getItems();
+        Set<OrderItemPersistenceEntity> existingItems = orderPersistenceEntity.getItems();
         if (existingItems == null || existingItems.isEmpty()) {
             return newOrUpdatedItems.stream()
                     .map(this::fromDomain)
                     .collect(Collectors.toSet());
         }
 
-        var existingItemMap =
-                existingItems.stream()
-                        .collect(Collectors.toMap(OrderItemPersistenceEntity::getId, item -> item));
+        Map<Long, OrderItemPersistenceEntity> existingItemMap = existingItems.stream()
+                .collect(Collectors.toMap(OrderItemPersistenceEntity::getId, item -> item));
 
         return newOrUpdatedItems.stream()
                 .map(orderItem -> {
-                    var itemPersistence =
-                            existingItemMap.getOrDefault(
-                                    orderItem.id().value().toLong(),
-                                    new OrderItemPersistenceEntity()
-                            );
+                    OrderItemPersistenceEntity itemPersistence = existingItemMap.getOrDefault(
+                            orderItem.id().value().toLong(), new OrderItemPersistenceEntity()
+                    );
                     return merge(itemPersistence, orderItem);
-                }).collect(Collectors.toSet());
+                })
+                .collect(Collectors.toSet());
     }
 
     public OrderItemPersistenceEntity fromDomain(OrderItem orderItem) {
         return merge(new OrderItemPersistenceEntity(), orderItem);
     }
 
-    public OrderItemPersistenceEntity merge(OrderItemPersistenceEntity orderItemPersistenceEntity, OrderItem orderItem) {
+    private OrderItemPersistenceEntity merge(OrderItemPersistenceEntity orderItemPersistenceEntity,
+                                             OrderItem orderItem) {
         orderItemPersistenceEntity.setId(orderItem.id().value().toLong());
         orderItemPersistenceEntity.setProductId(orderItem.productId().value());
         orderItemPersistenceEntity.setProductName(orderItem.productName().value());
@@ -93,34 +93,11 @@ public class OrderPersistenceEntityAssembler {
         return BillingEmbeddable.builder()
                 .firstName(billing.fullName().firstName())
                 .lastName(billing.fullName().lastName())
-                .phone(billing.phone().value())
                 .document(billing.document().value())
+                .phone(billing.phone().value())
                 .email(billing.email().value())
                 .address(toAddressEmbeddable(billing.address()))
                 .build();
-    }
-
-    private ShippingEmbeddable toShippingEmbeddable(Shipping shipping) {
-        if (shipping == null) {
-            return null;
-        }
-        var shippingEmbeddableBuilder = ShippingEmbeddable.builder()
-                .cost(shipping.cost().value())
-                .expectedDate(shipping.expectedDate())
-                .address(toAddressEmbeddable(shipping.address()));
-
-        var recipient = shipping.recipient();
-
-        if (recipient != null) {
-            shippingEmbeddableBuilder.recipient(RecipientEmbeddable.builder()
-                    .firstName(recipient.fullName().firstName())
-                    .lastName(recipient.fullName().lastName())
-                    .document(recipient.document().value())
-                    .phone(recipient.phone().value())
-                    .build()
-            );
-        }
-        return shippingEmbeddableBuilder.build();
     }
 
     private AddressEmbeddable toAddressEmbeddable(Address address) {
@@ -128,13 +105,36 @@ public class OrderPersistenceEntityAssembler {
             return null;
         }
         return AddressEmbeddable.builder()
-                .street(address.street())
-                .number(address.number())
-                .complement(address.complement())
                 .city(address.city())
-                .neighborhood(address.neighborhood())
                 .state(address.state())
-                .zipcode(address.zipCode().value())
+                .number(address.number())
+                .street(address.street())
+                .complement(address.complement())
+                .neighborhood(address.neighborhood())
+                .zipCode(address.zipCode().value())
                 .build();
     }
+
+    private ShippingEmbeddable toShippingEmbeddable(Shipping shipping) {
+        if (shipping == null) {
+            return null;
+        }
+        var builder = ShippingEmbeddable.builder()
+                .expectedDate(shipping.expectedDate())
+                .cost(shipping.cost().value())
+                .address(toAddressEmbeddable(shipping.address()));
+        var recipient = shipping.recipient();
+        if (recipient != null) {
+            builder.recipient(
+                    RecipientEmbeddable.builder()
+                            .firstName(recipient.fullName().firstName())
+                            .lastName(recipient.fullName().lastName())
+                            .document(recipient.document().value())
+                            .phone(recipient.phone().value())
+                            .build()
+            );
+        }
+        return builder.build();
+    }
+
 }

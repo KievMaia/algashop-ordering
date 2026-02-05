@@ -10,6 +10,7 @@ import com.algaworks.algashop.ordering.infrastructure.persistence.repository.Ord
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
@@ -17,6 +18,7 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class OrdersPersistenceProvider implements Orders {
 
     private final OrderPersistenceEntityRepository persistenceRepository;
@@ -33,10 +35,16 @@ public class OrdersPersistenceProvider implements Orders {
 
     @Override
     public boolean existis(OrderId orderId) {
-        return false;
+        return persistenceRepository.existsById(orderId.value().toLong());
     }
 
     @Override
+    public long count() {
+        return persistenceRepository.count();
+    }
+
+    @Override
+    @Transactional(readOnly = false)
     public void add(Order aggregateRoot) {
         var orderId = aggregateRoot.id().value().toLong();
         persistenceRepository.findById(orderId).ifPresentOrElse(
@@ -77,10 +85,5 @@ public class OrdersPersistenceProvider implements Orders {
         version.setAccessible(true);
         ReflectionUtils.setField(version, aggregateRoot, persistenceEntity.getVersion());
         version.setAccessible(false);
-    }
-
-    @Override
-    public int count() {
-        return 0;
     }
 }
