@@ -17,7 +17,7 @@ public class CustomerPersistenceEntityAssembler {
         customerPersistenceEntity.setId(customer.id().value());
         customerPersistenceEntity.setFirstName(customer.fullName().firstName());
         customerPersistenceEntity.setLastName(customer.fullName().lastName());
-        customerPersistenceEntity.setBirthDate(customer.birthDate().value());
+        customerPersistenceEntity.setBirthDate(customer.birthDate() != null ? customer.birthDate().value() : null);
         customerPersistenceEntity.setEmail(customer.email().value());
         customerPersistenceEntity.setPhone(customer.phone().value());
         customerPersistenceEntity.setDocument(customer.document().value());
