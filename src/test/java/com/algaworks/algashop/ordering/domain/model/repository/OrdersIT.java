@@ -32,7 +32,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class OrdersIT {
 
     private final Orders orders;
-    private Customers customers;
+    private final Customers customers;
 
     @Autowired
     public OrdersIT(Orders orders, final Customers customers) {
