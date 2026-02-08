@@ -21,10 +21,11 @@ import java.time.LocalDate;
 
 import static com.algaworks.algashop.ordering.domain.model.entity.OrderStatusEnum.DRAFT;
 import static com.algaworks.algashop.ordering.domain.model.entity.PaymentMethodEnum.GATEWAY_BALANCE;
+import static com.algaworks.algashop.ordering.domain.model.entity.customer.CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID;
 
 public class OrderTestDataBuilder {
 
-    private CustomerId customerId = new CustomerId();
+    private CustomerId customerId = DEFAULT_CUSTOMER_ID;
 
     private PaymentMethodEnum paymentMethodEnum = GATEWAY_BALANCE;
 

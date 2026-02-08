@@ -50,8 +50,6 @@ public class OrdersPersistenceProvider implements Orders {
                 (persistenceEntity) -> this.update(aggregateRoot, persistenceEntity),
                 () -> this.insert(aggregateRoot)
         );
-        var persistenceEntity = assembler.fromDomain(aggregateRoot);
-        persistenceRepository.saveAndFlush(persistenceEntity);
     }
 
     private void insert(Order aggregateRoot) {
