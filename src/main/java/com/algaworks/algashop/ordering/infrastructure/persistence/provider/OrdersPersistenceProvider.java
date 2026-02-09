@@ -2,6 +2,7 @@ package com.algaworks.algashop.ordering.infrastructure.persistence.provider;
 
 import com.algaworks.algashop.ordering.domain.model.entity.Order;
 import com.algaworks.algashop.ordering.domain.model.repository.Orders;
+import com.algaworks.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import com.algaworks.algashop.ordering.domain.model.valueobject.id.OrderId;
 import com.algaworks.algashop.ordering.infrastructure.persistence.assembler.OrderPersistenceEntityAssembler;
 import com.algaworks.algashop.ordering.infrastructure.persistence.disassembler.OrderPersistenceEntityDisassembler;
@@ -13,7 +14,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
 
+import java.time.OffsetDateTime;
+import java.time.Year;
+import java.time.ZoneOffset;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -52,10 +58,24 @@ public class OrdersPersistenceProvider implements Orders {
         );
     }
 
+    @Override
+    public List<Order> placedByCustomerYear(CustomerId customerId, Year year) {
+        var startDateTime = year.atDay(1).atStartOfDay().atOffset(ZoneOffset.UTC);
+        var endDateTime = startDateTime.plusYears(1).minusNanos(1);
+
+        var entities = persistenceRepository.findByCustomer_IdAndPlacedAtBetween(
+                customerId.value(),
+                startDateTime,
+                endDateTime
+        );
+
+        return entities.stream().map(disassembler::toDomainEntity).toList();
+    }
+
     private void insert(Order aggregateRoot) {
         var persistenceEntity = assembler.fromDomain(aggregateRoot);
         persistenceRepository.saveAndFlush(persistenceEntity);
-        updateVersion(aggregateRoot,  persistenceEntity);
+        updateVersion(aggregateRoot, persistenceEntity);
     }
 
     private void update(Order aggregateRoot, OrderPersistenceEntity persistenceEntity) {
