@@ -2,6 +2,7 @@ package com.algaworks.algashop.ordering.infrastructure.persistence.provider;
 
 import com.algaworks.algashop.ordering.domain.model.entity.Customer;
 import com.algaworks.algashop.ordering.domain.model.repository.Customers;
+import com.algaworks.algashop.ordering.domain.model.valueobject.Email;
 import com.algaworks.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import com.algaworks.algashop.ordering.infrastructure.persistence.assembler.CustomerPersistenceEntityAssembler;
 import com.algaworks.algashop.ordering.infrastructure.persistence.disassembler.CustomerPersistenceEntityDisassembler;
@@ -19,7 +20,7 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class CustomerPersistenceProvider implements Customers {
+public class CustomersPersistenceProvider implements Customers {
 
     private final CustomerPersistenceEntityRepository persistenceRepository;
     private final CustomerPersistenceEntityAssembler assembler;
@@ -33,7 +34,7 @@ public class CustomerPersistenceProvider implements Customers {
     }
 
     @Override
-    public boolean existis(CustomerId customerId) {
+    public boolean exists(CustomerId customerId) {
         return persistenceRepository.existsById(customerId.value());
     }
 
@@ -71,5 +72,10 @@ public class CustomerPersistenceProvider implements Customers {
             version.setAccessible(true);
             ReflectionUtils.setField(version, aggregateRoot, persistenceEntity.getVersion());
             version.setAccessible(false);
+    }
+
+    @Override
+    public Optional<Customer> ofEmail(Email email) {
+        return persistenceRepository.findByEmail(email.value()).map(disassembler::toDomainEntity);
     }
 }

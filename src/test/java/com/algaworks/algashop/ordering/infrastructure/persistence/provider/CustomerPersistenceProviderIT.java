@@ -17,11 +17,11 @@ import org.springframework.context.annotation.Import;
 })
 public class CustomerPersistenceProviderIT {
 
-    private final CustomerPersistenceProvider persistenceProvider;
+    private final CustomersPersistenceProvider persistenceProvider;
     private final CustomerPersistenceEntityRepository entityRepository;
 
     @Autowired
-    public CustomerPersistenceProviderIT(CustomerPersistenceProvider persistenceProvider, CustomerPersistenceEntityRepository entityRepository) {
+    public CustomerPersistenceProviderIT(CustomersPersistenceProvider persistenceProvider, CustomerPersistenceEntityRepository entityRepository) {
         this.persistenceProvider = persistenceProvider;
         this.entityRepository = entityRepository;
     }

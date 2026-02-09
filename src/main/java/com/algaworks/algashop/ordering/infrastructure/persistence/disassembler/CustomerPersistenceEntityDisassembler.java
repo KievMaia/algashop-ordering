@@ -39,6 +39,7 @@ public class CustomerPersistenceEntityDisassembler {
             return null;
         }
         return Address.builder()
+                .street(address.getStreet())
                 .complement(address.getComplement())
                 .neighborhood(address.getNeighborhood())
                 .number(address.getNumber())

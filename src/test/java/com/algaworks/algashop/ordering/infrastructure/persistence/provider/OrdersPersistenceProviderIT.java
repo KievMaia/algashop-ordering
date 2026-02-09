@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
         OrdersPersistenceProvider.class,
         OrderPersistenceEntityAssembler.class,
         OrderPersistenceEntityDisassembler.class,
-        CustomerPersistenceProvider.class,
+        CustomersPersistenceProvider.class,
         CustomerPersistenceEntityAssembler.class,
         CustomerPersistenceEntityDisassembler.class,
         SpringDataAuditingConfig.class,
@@ -31,21 +31,21 @@ import org.springframework.transaction.annotation.Transactional;
 class OrdersPersistenceProviderIT {
 
     private final OrdersPersistenceProvider persistenceProvider;
-    private final CustomerPersistenceProvider customerPersistenceProvider;
+    private final CustomersPersistenceProvider customersPersistenceProvider;
     private final OrderPersistenceEntityRepository entityRepository;
 
     @Autowired
     public OrdersPersistenceProviderIT(OrdersPersistenceProvider persistenceProvider,
-                                       final CustomerPersistenceProvider customerPersistenceProvider, OrderPersistenceEntityRepository entityRepository) {
+                                       final CustomersPersistenceProvider customersPersistenceProvider, OrderPersistenceEntityRepository entityRepository) {
         this.persistenceProvider = persistenceProvider;
-        this.customerPersistenceProvider = customerPersistenceProvider;
+        this.customersPersistenceProvider = customersPersistenceProvider;
         this.entityRepository = entityRepository;
     }
 
     @BeforeEach
     public void setup() {
-        if (!customerPersistenceProvider.existis(CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID)){
-            customerPersistenceProvider.add(
+        if (!customersPersistenceProvider.exists(CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID)){
+            customersPersistenceProvider.add(
                     CustomerTestDataBuilder.existingCustomer().build()
             );
         }

@@ -33,7 +33,7 @@ public class OrdersPersistenceProvider implements Orders {
     }
 
     @Override
-    public boolean existis(OrderId orderId) {
+    public boolean exists(OrderId orderId) {
         return persistenceRepository.existsById(orderId.value().toLong());
     }
 

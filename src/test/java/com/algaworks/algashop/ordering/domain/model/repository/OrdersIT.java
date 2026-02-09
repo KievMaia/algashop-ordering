@@ -8,7 +8,7 @@ import com.algaworks.algashop.ordering.infrastructure.persistence.assembler.Cust
 import com.algaworks.algashop.ordering.infrastructure.persistence.assembler.OrderPersistenceEntityAssembler;
 import com.algaworks.algashop.ordering.infrastructure.persistence.disassembler.CustomerPersistenceEntityDisassembler;
 import com.algaworks.algashop.ordering.infrastructure.persistence.disassembler.OrderPersistenceEntityDisassembler;
-import com.algaworks.algashop.ordering.infrastructure.persistence.provider.CustomerPersistenceProvider;
+import com.algaworks.algashop.ordering.infrastructure.persistence.provider.CustomersPersistenceProvider;
 import com.algaworks.algashop.ordering.infrastructure.persistence.provider.OrdersPersistenceProvider;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
         OrdersPersistenceProvider.class,
         OrderPersistenceEntityAssembler.class,
         OrderPersistenceEntityDisassembler.class,
-        CustomerPersistenceProvider.class,
+        CustomersPersistenceProvider.class,
         CustomerPersistenceEntityAssembler.class,
         CustomerPersistenceEntityDisassembler.class
 })
@@ -42,7 +42,7 @@ class OrdersIT {
 
     @BeforeEach
     public void setup() {
-        if (!customers.existis(CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID)){
+        if (!customers.exists(CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID)){
             customers.add(
                     CustomerTestDataBuilder.existingCustomer().build()
             );
@@ -136,7 +136,7 @@ class OrdersIT {
         var order = OrderTestDataBuilder.anOrder().build();
         orders.add(order);
 
-        Assertions.assertThat(orders.existis(order.id())).isTrue();
-        Assertions.assertThat(orders.existis(new OrderId())).isFalse();
+        Assertions.assertThat(orders.exists(order.id())).isTrue();
+        Assertions.assertThat(orders.exists(new OrderId())).isFalse();
     }
 }

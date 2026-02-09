@@ -42,7 +42,7 @@ class OrderPersistenceEntityAssemblerTest {
 
         Assertions.assertThat(orderPersistenceEntity).satisfies(
                 o -> Assertions.assertThat(o.getId()).isEqualTo(order.id().value().toLong()),
-                o -> Assertions.assertThat(o.getCustomerId()).isEqualTo(order.customerId().value()),
+                o -> Assertions.assertThat(o.getCustomer().getId()).isEqualTo(order.customerId().value()),
                 o -> Assertions.assertThat(o.getTotalAmount()).isEqualTo(order.totalAmount().value()),
                 o -> Assertions.assertThat(o.getTotalItems()).isEqualTo(order.totalItems().value()),
                 o -> Assertions.assertThat(o.getStatus()).isEqualTo(order.status().name()),
