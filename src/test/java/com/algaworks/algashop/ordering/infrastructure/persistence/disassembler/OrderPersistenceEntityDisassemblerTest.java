@@ -4,7 +4,6 @@ import com.algaworks.algashop.ordering.domain.model.entity.OrderStatusEnum;
 import com.algaworks.algashop.ordering.domain.model.entity.PaymentMethodEnum;
 import com.algaworks.algashop.ordering.domain.model.valueobject.Money;
 import com.algaworks.algashop.ordering.domain.model.valueobject.Quantity;
-import com.algaworks.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import com.algaworks.algashop.ordering.domain.model.valueobject.id.OrderId;
 import com.algaworks.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntityTestDataBuilder;
 import org.assertj.core.api.Assertions;
