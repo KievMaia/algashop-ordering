@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
 
 import java.time.Year;
-import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,13 +57,9 @@ public class OrdersPersistenceProvider implements Orders {
 
     @Override
     public List<Order> placedByCustomerYear(CustomerId customerId, Year year) {
-        var startDateTime = year.atDay(1).atStartOfDay().atOffset(ZoneOffset.UTC);
-        var endDateTime = startDateTime.plusYears(1).minusNanos(1);
-
-        var entities = persistenceRepository.findByCustomer_IdAndPlacedAtBetween(
+        var entities = persistenceRepository.placedByCustomerInYear(
                 customerId.value(),
-                startDateTime,
-                endDateTime
+                year.getValue()
         );
 
         return entities.stream().map(disassembler::toDomainEntity).toList();
