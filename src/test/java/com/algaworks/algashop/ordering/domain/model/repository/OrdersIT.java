@@ -1,6 +1,5 @@
 package com.algaworks.algashop.ordering.domain.model.repository;
 
-import com.algaworks.algashop.ordering.domain.model.entity.Order;
 import com.algaworks.algashop.ordering.domain.model.entity.OrderStatusEnum;
 import com.algaworks.algashop.ordering.domain.model.entity.customer.CustomerTestDataBuilder;
 import com.algaworks.algashop.ordering.domain.model.entity.order.OrderTestDataBuilder;
@@ -21,7 +20,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 
 import java.time.Year;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
