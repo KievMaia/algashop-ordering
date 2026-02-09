@@ -1,8 +1,10 @@
 package com.algaworks.algashop.ordering.domain.model.repository;
 
+import com.algaworks.algashop.ordering.domain.model.entity.Order;
 import com.algaworks.algashop.ordering.domain.model.entity.OrderStatusEnum;
 import com.algaworks.algashop.ordering.domain.model.entity.customer.CustomerTestDataBuilder;
 import com.algaworks.algashop.ordering.domain.model.entity.order.OrderTestDataBuilder;
+import com.algaworks.algashop.ordering.domain.model.valueobject.Money;
 import com.algaworks.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import com.algaworks.algashop.ordering.domain.model.valueobject.id.OrderId;
 import com.algaworks.algashop.ordering.infrastructure.persistence.assembler.CustomerPersistenceEntityAssembler;
@@ -21,6 +23,7 @@ import org.springframework.orm.ObjectOptimisticLockingFailureException;
 
 import java.time.Year;
 
+import static com.algaworks.algashop.ordering.domain.model.entity.customer.CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
@@ -37,6 +40,8 @@ class OrdersIT {
     private final Orders orders;
     private final Customers customers;
 
+    CustomerId customerId = DEFAULT_CUSTOMER_ID;
+
     @Autowired
     public OrdersIT(Orders orders, final Customers customers) {
         this.orders = orders;
@@ -45,7 +50,7 @@ class OrdersIT {
 
     @BeforeEach
     public void setup() {
-        if (!customers.exists(CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID)){
+        if (!customers.exists(DEFAULT_CUSTOMER_ID)){
             customers.add(
                     CustomerTestDataBuilder.existingCustomer().build()
             );
@@ -150,8 +155,6 @@ class OrdersIT {
         orders.add(OrderTestDataBuilder.anOrder().orderStatusEnum(OrderStatusEnum.CANCELED).build());
         orders.add(OrderTestDataBuilder.anOrder().orderStatusEnum(OrderStatusEnum.DRAFT).build());
 
-        var customerId = CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID;
-
         var listedOrders = orders.placedByCustomerYear(customerId, Year.now());
         Assertions.assertThat(listedOrders).isNotEmpty();
         Assertions.assertThat(listedOrders.size()).isEqualTo(2);
@@ -161,5 +164,46 @@ class OrdersIT {
 
         listedOrders = orders.placedByCustomerYear(new CustomerId(), Year.now());
         Assertions.assertThat(listedOrders).isEmpty();
+    }
+
+    @Test
+    public void shouldReturnTotalSoldByCustomer() {
+        var order1 = OrderTestDataBuilder.anOrder().orderStatusEnum(OrderStatusEnum.PAID).build();
+        var order2 = OrderTestDataBuilder.anOrder().orderStatusEnum(OrderStatusEnum.PAID).build();
+
+        orders.add(order1);
+        orders.add(order2);
+
+        orders.add(
+                OrderTestDataBuilder.anOrder().orderStatusEnum(OrderStatusEnum.CANCELED).build()
+        );
+        orders.add(
+                OrderTestDataBuilder.anOrder().orderStatusEnum(OrderStatusEnum.PLACED).build()
+        );
+
+        var expectedTotalAmount = order1.totalAmount().add(order2.totalAmount());
+
+        Assertions.assertThat(orders.totalSoldForCustomer(customerId)).isEqualTo(expectedTotalAmount);
+
+        Assertions.assertThat(orders.totalSoldForCustomer(new CustomerId())).isEqualTo(Money.ZERO);
+    }
+
+    @Test
+    public void shouldReturnSalesQuantityByCustomer() {
+        var order1 = OrderTestDataBuilder.anOrder().orderStatusEnum(OrderStatusEnum.PAID).build();
+        var order2 = OrderTestDataBuilder.anOrder().orderStatusEnum(OrderStatusEnum.PAID).build();
+
+        orders.add(order1);
+        orders.add(order2);
+
+        orders.add(
+                OrderTestDataBuilder.anOrder().orderStatusEnum(OrderStatusEnum.CANCELED).build()
+        );
+        orders.add(
+                OrderTestDataBuilder.anOrder().orderStatusEnum(OrderStatusEnum.PLACED).build()
+        );
+
+        Assertions.assertThat(orders.salesQuantityByCustomerInYear(customerId, Year.now())).isEqualTo(2L);
+        Assertions.assertThat(orders.salesQuantityByCustomerInYear(customerId, Year.now().minusYears(1))).isZero();
     }
 }
