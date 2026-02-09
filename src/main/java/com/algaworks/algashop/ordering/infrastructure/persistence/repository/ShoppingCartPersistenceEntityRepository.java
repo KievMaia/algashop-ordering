@@ -1,0 +1,11 @@
+package com.algaworks.algashop.ordering.infrastructure.persistence.repository;
+
+import com.algaworks.algashop.ordering.domain.model.valueobject.id.CustomerId;
+import com.algaworks.algashop.ordering.infrastructure.persistence.entity.ShoppingCartPersistenceEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
+
+public interface ShoppingCartPersistenceEntityRepository extends JpaRepository<ShoppingCartPersistenceEntity, Long> {
+    Optional<ShoppingCartPersistenceEntity> findByCustomerId(CustomerId customerId);
+}
