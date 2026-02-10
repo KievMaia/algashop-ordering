@@ -1,31 +1,44 @@
 package com.algaworks.algashop.ordering.domain.model.entity.shoppingcart;
 
 import com.algaworks.algashop.ordering.domain.model.entity.ShoppingCart;
+import com.algaworks.algashop.ordering.domain.model.entity.customer.CustomerTestDataBuilder;
 import com.algaworks.algashop.ordering.domain.model.entity.product.ProductTestDataBuilder;
 import com.algaworks.algashop.ordering.domain.model.valueobject.Quantity;
 import com.algaworks.algashop.ordering.domain.model.valueobject.id.CustomerId;
+import com.algaworks.algashop.ordering.domain.model.valueobject.id.ShoppingCartId;
 
 public class ShoppingCartTestDataBuilder {
+    public CustomerId customerId = CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID;
+    public static final ShoppingCartId DEFAULT_SHOPPING_CART_ID = new ShoppingCartId();
     private boolean withItems = true;
 
-    private ShoppingCartTestDataBuilder() {}
+    private ShoppingCartTestDataBuilder() {
+    }
 
     public static ShoppingCartTestDataBuilder aShoppingCart() {
         return new ShoppingCartTestDataBuilder();
     }
 
     public ShoppingCart build() {
-        ShoppingCart shoppingCart = ShoppingCart.startShopping(new CustomerId());
+        ShoppingCart cart = ShoppingCart.startShopping(customerId);
 
-        if (this.withItems) {
-            var mousePad = ProductTestDataBuilder.aProductAltMousePad().build();
-            var ramMemory = ProductTestDataBuilder.aProductAltRamMemory().build();
-
-            shoppingCart.addItem(mousePad, Quantity.of(1));
-            shoppingCart.addItem(ramMemory, Quantity.of(1));
+        if (withItems) {
+            cart.addItem(
+                    ProductTestDataBuilder.aProduct().build(),
+                    new Quantity(2)
+            );
+            cart.addItem(
+                    ProductTestDataBuilder.aProductAltRamMemory().build(),
+                    new Quantity(1)
+            );
         }
 
-        return shoppingCart;
+        return cart;
+    }
+
+    public ShoppingCartTestDataBuilder customerId(CustomerId customerId) {
+        this.customerId = customerId;
+        return this;
     }
 
     public ShoppingCartTestDataBuilder withItems(boolean withItems) {

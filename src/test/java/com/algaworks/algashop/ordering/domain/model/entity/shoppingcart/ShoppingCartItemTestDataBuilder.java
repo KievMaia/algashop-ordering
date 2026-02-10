@@ -1,6 +1,7 @@
 package com.algaworks.algashop.ordering.domain.model.entity.shoppingcart;
 
 import com.algaworks.algashop.ordering.domain.model.entity.ShoppingCartItem;
+import com.algaworks.algashop.ordering.domain.model.entity.product.ProductTestDataBuilder;
 import com.algaworks.algashop.ordering.domain.model.valueobject.Money;
 import com.algaworks.algashop.ordering.domain.model.valueobject.Product;
 import com.algaworks.algashop.ordering.domain.model.valueobject.ProductName;
@@ -10,9 +11,12 @@ import com.algaworks.algashop.ordering.domain.model.valueobject.id.ShoppingCartI
 import com.algaworks.algashop.ordering.domain.model.valueobject.id.ShoppingCartItemId;
 
 public class ShoppingCartItemTestDataBuilder {
-    public ShoppingCartItemId id = new ShoppingCartItemId();
-    public Money price = Money.of("1000.00");
-    public Quantity quantity = Quantity.of(1);
+    private ShoppingCartId shoppingCartId = ShoppingCartTestDataBuilder.DEFAULT_SHOPPING_CART_ID;
+    private ProductName productName = new ProductName("Notebook");
+    private Money price = new Money("1000");
+    private Quantity quantity = new Quantity(1);
+    private boolean available = true;
+    private Product product = ProductTestDataBuilder.aProduct().name(productName).inStock(available).price(price).build();
 
     private ShoppingCartItemTestDataBuilder() {
     }
@@ -23,19 +27,24 @@ public class ShoppingCartItemTestDataBuilder {
 
     public ShoppingCartItem build() {
         return ShoppingCartItem.brandNew()
-                .shoppingCartId(new ShoppingCartId())
-                .product(Product.builder()
-                        .id(new ProductId())
-                        .name(new ProductName("Notebook"))
-                        .price(price)
-                        .inStock(true)
-                        .build())
-                .quantity(Quantity.of(1))
+                .shoppingCartId(shoppingCartId)
+                .product(product)
+                .quantity(quantity)
                 .build();
     }
 
-    public ShoppingCartItemTestDataBuilder id(ShoppingCartItemId id) {
-        this.id = id;
+    public ShoppingCartItemTestDataBuilder shoppingCartId(ShoppingCartId shoppingCartId) {
+        this.shoppingCartId = shoppingCartId;
+        return this;
+    }
+
+    public ShoppingCartItemTestDataBuilder product(Product product) {
+        this.product = product;
+        return this;
+    }
+
+    public ShoppingCartItemTestDataBuilder productName(ProductName productName) {
+        this.productName = productName;
         return this;
     }
 
@@ -46,6 +55,11 @@ public class ShoppingCartItemTestDataBuilder {
 
     public ShoppingCartItemTestDataBuilder quantity(Quantity quantity) {
         this.quantity = quantity;
+        return this;
+    }
+
+    public ShoppingCartItemTestDataBuilder available(boolean available) {
+        this.available = available;
         return this;
     }
 }

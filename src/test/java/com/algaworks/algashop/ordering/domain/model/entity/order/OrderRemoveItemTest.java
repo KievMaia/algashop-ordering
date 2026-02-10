@@ -47,7 +47,7 @@ public class OrderRemoveItemTest {
                 .isThrownBy(() -> order.removeItem(new OrderItemId()));
 
         Assertions.assertWith(order,
-                (i) -> Assertions.assertThat(i.totalAmount()).isEqualTo(new Money("30160.00")),
+                (i) -> Assertions.assertThat(i.totalAmount()).isEqualTo(new Money("6160.00")),
                 (i) -> Assertions.assertThat(i.totalItems()).isEqualTo(new Quantity(3))
         );
     }
@@ -60,7 +60,7 @@ public class OrderRemoveItemTest {
                 .isThrownBy(() -> order.removeItem(new OrderItemId()));
 
         Assertions.assertWith(order,
-                (i) -> Assertions.assertThat(i.totalAmount()).isEqualTo(new Money("30160.00")),
+                (i) -> Assertions.assertThat(i.totalAmount()).isEqualTo(new Money("6160.00")),
                 (i) -> Assertions.assertThat(i.totalItems()).isEqualTo(new Quantity(3))
         );
     }

@@ -1,58 +1,123 @@
 package com.algaworks.algashop.ordering.domain.model.entity.shoppingcart;
 
-import com.algaworks.algashop.ordering.domain.model.entity.ShoppingCart;
 import com.algaworks.algashop.ordering.domain.model.entity.ShoppingCartItem;
 import com.algaworks.algashop.ordering.domain.model.entity.product.ProductTestDataBuilder;
-import com.algaworks.algashop.ordering.domain.model.exception.ShoppingCartItemIncompatibleProductException;
+import com.algaworks.algashop.ordering.domain.model.valueobject.Money;
 import com.algaworks.algashop.ordering.domain.model.valueobject.Product;
+import com.algaworks.algashop.ordering.domain.model.valueobject.ProductName;
 import com.algaworks.algashop.ordering.domain.model.valueobject.Quantity;
-import com.algaworks.algashop.ordering.domain.model.valueobject.id.CustomerId;
+import com.algaworks.algashop.ordering.domain.model.valueobject.id.ProductId;
+import com.algaworks.algashop.ordering.domain.model.valueobject.id.ShoppingCartId;
+import com.algaworks.algashop.ordering.domain.model.valueobject.id.ShoppingCartItemId;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class ShoppingCartItemTest {
 
     @Test
-    public void shouldGenerateEmptyShoppingCartItem() {
-        var customerId = new CustomerId();
-        var shoppingCart = ShoppingCart.startShopping(customerId);
-        var product = ProductTestDataBuilder.aProductAltMousePad().build();
-        var shoppingCartItem = ShoppingCartItem.brandNew()
-                .shoppingCartId(shoppingCart.id())
-                .product(product)
-                .quantity(new Quantity(1))
+    public void givenValidData_whenCreateNewItem_shouldInitializeCorrectly() {
+        ShoppingCartItem item = ShoppingCartItemTestDataBuilder.aShoppingCartItem()
+                .productName(new ProductName("Notebook"))
+                .price(new Money("2000"))
+                .quantity(new Quantity(2))
+                .available(true)
                 .build();
 
-        Assertions.assertWith(shoppingCartItem,
-                sci -> Assertions.assertThat(sci.id()).isNotNull(),
-                sci -> Assertions.assertThat(sci.productId()).isEqualTo(product.id()),
-                sci -> Assertions.assertThat(sci.shoppingCartId()).isEqualTo(shoppingCart.id()),
-                sc -> Assertions.assertThat(shoppingCartItem.isAvailable()).isTrue()
+        Assertions.assertWith(item,
+                i -> Assertions.assertThat(i.id()).isNotNull(),
+                i -> Assertions.assertThat(i.shoppingCartId()).isNotNull(),
+                i -> Assertions.assertThat(i.productId()).isNotNull(),
+                i -> Assertions.assertThat(i.name()).isEqualTo(new ProductName("Notebook")),
+                i -> Assertions.assertThat(i.price()).isEqualTo(new Money("1000.00")),
+                i -> Assertions.assertThat(i.quantity()).isEqualTo(new Quantity(2)),
+                i -> Assertions.assertThat(i.isAvailable()).isTrue(),
+                i -> Assertions.assertThat(i.totalAmount()).isEqualTo(new Money("2000.00"))
         );
     }
 
     @Test
-    public void shouldThrowExceptionWhenUpdateQuantityToZero() {
-        var shoppingCartItem = ShoppingCartItemTestDataBuilder.aShoppingCartItem().build();
-        var invalidQuantity = Quantity.ZERO;
+    public void givenItem_whenChangeQuantity_shouldRecalculateTotal() {
+        ShoppingCartItem item = ShoppingCartItemTestDataBuilder.aShoppingCartItem()
+                .price(new Money("1000"))
+                .quantity(new Quantity(1))
+                .build();
 
-        Assertions.assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() -> shoppingCartItem.changeQuantity(invalidQuantity));
+        item.changeQuantity(new Quantity(3));
+
+        Assertions.assertWith(item,
+                i -> Assertions.assertThat(i.quantity()).isEqualTo(new Quantity(3)),
+                i -> Assertions.assertThat(i.totalAmount()).isEqualTo(new Money("3000"))
+        );
     }
 
     @Test
-    void givenShoppingCartItem_whenTryToRefreshWithDifferentProductIds_shouldThrowException() {
-        var customerId = new CustomerId();
-        var shoppingCart = ShoppingCart.startShopping(customerId);
-        var product = ProductTestDataBuilder.aProductAltMousePad().build();
-        var shoppingCartItem = ShoppingCartItem.brandNew()
-                .shoppingCartId(shoppingCart.id())
-                .product(product)
-                .quantity(new Quantity(1))
+    public void givenItem_whenChangePrice_shouldRecalculateTotal() {
+        ShoppingCartItem item = ShoppingCartItemTestDataBuilder.aShoppingCartItem()
+                .price(new Money("1500"))
+                .quantity(new Quantity(2))
                 .build();
-        Product productWithDifferentId = ProductTestDataBuilder.aProduct().build();
 
-        Assertions.assertThatThrownBy(() -> shoppingCartItem.refresh(productWithDifferentId))
-                .isInstanceOf(ShoppingCartItemIncompatibleProductException.class);
+        Product product = ProductTestDataBuilder.aProduct().build();
+        item.refresh(product);
+
+        Assertions.assertWith(item,
+                i -> Assertions.assertThat(i.price()).isEqualTo(product.price()),
+                i -> Assertions.assertThat(i.totalAmount()).isEqualTo(product.price().multiply(new Quantity(2)))
+        );
+    }
+
+    @Test
+    public void givenItem_whenChangeAvailability_shouldUpdateStatus() {
+        ShoppingCartItem item = ShoppingCartItemTestDataBuilder.aShoppingCartItem()
+                .available(true)
+                .build();
+
+        Product product = ProductTestDataBuilder.aProduct()
+                .inStock(false)
+                .build();
+
+        item.refresh(product);
+
+        Assertions.assertThat(item.isAvailable()).isFalse();
+    }
+
+    @Test
+    public void givenEqualIds_whenCompareItems_shouldBeEqual() {
+        ShoppingCartId cartId = new ShoppingCartId();
+        ProductId productId = new ProductId();
+        ShoppingCartItemId shoppingCartItemId = new ShoppingCartItemId();
+
+        ShoppingCartItem item1 = ShoppingCartItem.existing()
+                .id(shoppingCartItemId)
+                .shoppingCartId(cartId)
+                .productId(productId)
+                .productName(new ProductName("Mouse"))
+                .price(new Money("100"))
+                .quantity(new Quantity(1))
+                .available(true)
+                .totalAmount(new Money("100"))
+                .build();
+
+        ShoppingCartItem item2 = ShoppingCartItem.existing()
+                .id(shoppingCartItemId)
+                .shoppingCartId(cartId)
+                .productId(productId)
+                .productName(new ProductName("Notebook"))
+                .price(new Money("100"))
+                .quantity(new Quantity(1))
+                .available(true)
+                .totalAmount(new Money("100"))
+                .build();
+
+        Assertions.assertThat(item1).isEqualTo(item2);
+        Assertions.assertThat(item1.hashCode()).isEqualTo(item2.hashCode());
+    }
+
+    @Test
+    public void givenDifferentIds_whenCompareItems_shouldNotBeEqual() {
+        ShoppingCartItem item1 = ShoppingCartItemTestDataBuilder.aShoppingCartItem().build();
+        ShoppingCartItem item2 = ShoppingCartItemTestDataBuilder.aShoppingCartItem().build();
+
+        Assertions.assertThat(item1).isNotEqualTo(item2);
     }
 }

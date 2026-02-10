@@ -5,7 +5,8 @@ import com.algaworks.algashop.ordering.infrastructure.persistence.entity.Shoppin
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
+import java.util.UUID;
 
-public interface ShoppingCartPersistenceEntityRepository extends JpaRepository<ShoppingCartPersistenceEntity, Long> {
+public interface ShoppingCartPersistenceEntityRepository extends JpaRepository<ShoppingCartPersistenceEntity, UUID> {
     Optional<ShoppingCartPersistenceEntity> findByCustomerId(CustomerId customerId);
 }

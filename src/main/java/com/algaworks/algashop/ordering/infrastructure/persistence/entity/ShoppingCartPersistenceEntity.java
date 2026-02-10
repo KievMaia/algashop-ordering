@@ -1,10 +1,12 @@
 package com.algaworks.algashop.ordering.infrastructure.persistence.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 import lombok.AllArgsConstructor;
@@ -22,6 +24,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -37,7 +41,7 @@ public class ShoppingCartPersistenceEntity {
 
     @Id
     @EqualsAndHashCode.Include
-    private Long id;
+    private UUID id;
 
     @ManyToOne(optional = false)
     @JoinColumn
@@ -45,6 +49,9 @@ public class ShoppingCartPersistenceEntity {
 
     private BigDecimal totalAmount;
     private Integer totalItems;
+
+    @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL)
+    private Set<ShoppingCartItemPersistenceEntity> items = new HashSet<>();
 
     @CreatedBy
     private UUID createdByUserId;
@@ -62,7 +69,7 @@ public class ShoppingCartPersistenceEntity {
     private Long version;
 
     @Builder
-    public ShoppingCartPersistenceEntity(Long id, CustomerPersistenceEntity customer, BigDecimal totalAmount, Integer totalItems, OffsetDateTime createdAt, UUID createdByUserId, OffsetDateTime lastModifiedAt, UUID lastModifiedByUserId, Long version) {
+    public ShoppingCartPersistenceEntity(UUID id, CustomerPersistenceEntity customer, BigDecimal totalAmount, Integer totalItems, OffsetDateTime createdAt, UUID createdByUserId, OffsetDateTime lastModifiedAt, UUID lastModifiedByUserId, Long version) {
         this.id = id;
         this.customer = customer;
         this.totalAmount = totalAmount;
@@ -72,5 +79,39 @@ public class ShoppingCartPersistenceEntity {
         this.lastModifiedAt = lastModifiedAt;
         this.lastModifiedByUserId = lastModifiedByUserId;
         this.version = version;
+    }
+
+    public void addItem(Set<ShoppingCartItemPersistenceEntity> items) {
+        for (ShoppingCartItemPersistenceEntity item : items) {
+            this.addItem(item);
+        }
+    }
+
+    public void addItem(ShoppingCartItemPersistenceEntity item) {
+        if (item == null) {
+            return;
+        }
+        if (this.getItems() == null) {
+            this.setItems(new HashSet<>());
+        }
+        item.setShoppingCart(this);
+        this.items.add(item);
+    }
+
+    public UUID getCustomerId() {
+        if (customer == null) {
+            return null;
+        }
+        return customer.getId();
+    }
+
+    public void replaceItems(Set<ShoppingCartItemPersistenceEntity> updatedItems) {
+        if (updatedItems == null || updatedItems.isEmpty()) {
+            this.setItems(new HashSet<>());
+            return;
+        }
+
+        updatedItems.forEach(i -> i.setShoppingCart(this));
+        this.setItems(updatedItems);
     }
 }

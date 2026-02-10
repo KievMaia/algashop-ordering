@@ -5,6 +5,7 @@ import com.algaworks.algashop.ordering.domain.model.repository.ShoppingCarts;
 import com.algaworks.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import com.algaworks.algashop.ordering.domain.model.valueobject.id.ShoppingCartId;
 import com.algaworks.algashop.ordering.infrastructure.persistence.assembler.ShoppingCartPersistenceEntityAssembler;
+import com.algaworks.algashop.ordering.infrastructure.persistence.disassembler.ShoppingCartPersistenceEntityDisassembler;
 import com.algaworks.algashop.ordering.infrastructure.persistence.entity.ShoppingCartPersistenceEntity;
 import com.algaworks.algashop.ordering.infrastructure.persistence.repository.ShoppingCartPersistenceEntityRepository;
 import jakarta.persistence.EntityManager;
@@ -40,18 +41,18 @@ public class ShoppingCartsPersistenceProvider implements ShoppingCarts {
 
     @Override
     public void remove(ShoppingCartId shoppingCartId) {
-        persistenceRepository.deleteById(shoppingCartId.value().toLong());
+        persistenceRepository.deleteById(shoppingCartId.value());
     }
 
     @Override
     public Optional<ShoppingCart> ofId(ShoppingCartId shoppingCartId) {
-        return persistenceRepository.findById(shoppingCartId.value().toLong())
-                .map(disassembler.toDomainEntity);
+        return persistenceRepository.findById(shoppingCartId.value())
+                .map(disassembler::toDomainEntity);
     }
 
     @Override
     public boolean exists(ShoppingCartId shoppingCartId) {
-        return persistenceRepository.existsById(shoppingCartId.value().toLong());
+        return persistenceRepository.existsById(shoppingCartId.value());
     }
 
     @Override
@@ -63,7 +64,7 @@ public class ShoppingCartsPersistenceProvider implements ShoppingCarts {
     @Transactional(readOnly = false)
     public void add(ShoppingCart aggregateRoot) {
         var shoppingCartId = aggregateRoot.id().value();
-        persistenceRepository.findById(shoppingCartId.toLong()).ifPresentOrElse(
+        persistenceRepository.findById(shoppingCartId).ifPresentOrElse(
                 (persistenceEntity) -> this.update(aggregateRoot, persistenceEntity),
                 () -> this.insert(aggregateRoot)
         );

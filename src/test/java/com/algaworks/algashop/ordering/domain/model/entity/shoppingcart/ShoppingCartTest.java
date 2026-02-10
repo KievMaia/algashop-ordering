@@ -88,23 +88,23 @@ class ShoppingCartTest {
                 .withItems(false)
                 .build();
 
-        var mousePad = ProductTestDataBuilder.aProductAltMousePad().build();
+        var notebook = ProductTestDataBuilder.aProduct().build();
 
-        shoppingCart.addItem(mousePad, Quantity.of(5));
+        shoppingCart.addItem(notebook, Quantity.of(5));
 
 
-        var mousePadUpdatedPrice = Money.of("20.00");
-        mousePad = ProductTestDataBuilder.aProductAltMousePad()
-                .price(mousePadUpdatedPrice)
+        var notebookUpdatedPrice = Money.of("20.00");
+        notebook = ProductTestDataBuilder.aProduct()
+                .price(notebookUpdatedPrice)
                 .build();
 
-        shoppingCart.refreshItem(mousePad);
+        shoppingCart.refreshItem(notebook);
 
-        var shoppingCartItem = shoppingCart.findItem(mousePad.id());
+        var shoppingCartItem = shoppingCart.findItem(notebook.id());
 
         var expectedTotalAmount = Money.of("100.00");
 
-        Assertions.assertThat(shoppingCartItem.price()).isEqualTo(mousePadUpdatedPrice);
+        Assertions.assertThat(shoppingCartItem.price()).isEqualTo(notebookUpdatedPrice);
         Assertions.assertThat(shoppingCart.totalAmount()).isEqualTo(expectedTotalAmount);
     }
 

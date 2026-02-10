@@ -58,7 +58,7 @@ class OrderTest {
 
         Assertions.assertWith(orderItem,
                 (i) -> Assertions.assertThat(i.id()).isNotNull(),
-                (i) -> Assertions.assertThat(i.productName()).isEqualTo(new ProductName("Mouse pad")),
+                (i) -> Assertions.assertThat(i.productName()).isEqualTo(new ProductName("Mouse Pad")),
                 (i) -> Assertions.assertThat(i.productId()).isEqualTo(productId),
                 (i) -> Assertions.assertThat(i.price()).isEqualTo(new Money("100")),
                 (i) -> Assertions.assertThat(i.quantity()).isEqualTo(new Quantity(1))

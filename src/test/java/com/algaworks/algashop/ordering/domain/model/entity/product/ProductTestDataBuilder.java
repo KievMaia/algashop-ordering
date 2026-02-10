@@ -7,43 +7,40 @@ import com.algaworks.algashop.ordering.domain.model.valueobject.id.ProductId;
 
 public class ProductTestDataBuilder {
 
-    private static final ProductId PRODUCT_ID = new ProductId();
-    private static final ProductId UNAVAILABLE_PRODUCT_ID = new ProductId();
-    private static final ProductId ALT_RAM_MEMORY_PRODUCT_ID = new ProductId();
-    private static final ProductId ALT_MOUSE_PAD_PRODUCT_ID = new ProductId();
+    public static final ProductId DEFAULT_PRODUCT_ID = new ProductId();
 
     private ProductTestDataBuilder() {
     }
 
     public static Product.ProductBuilder aProduct() {
         return Product.builder()
-                .id(PRODUCT_ID)
-                .name(ProductName.of("Macbook M4"))
-                .price(Money.of("15000"))
-                .inStock(true);
+                .id(DEFAULT_PRODUCT_ID)
+                .inStock(true)
+                .name(new ProductName("Notebook X11"))
+                .price(new Money("3000"));
     }
 
     public static Product.ProductBuilder aProductUnavailable() {
         return Product.builder()
-                .id(UNAVAILABLE_PRODUCT_ID)
-                .name(ProductName.of("Monitor 31 inch"))
-                .price(Money.of("2500.00"))
+                .id(new ProductId())
+                .name(new ProductName("Desktop FX9000"))
+                .price(new Money("2500"))
                 .inStock(false);
     }
 
     public static Product.ProductBuilder aProductAltRamMemory() {
         return Product.builder()
-                .id(ALT_RAM_MEMORY_PRODUCT_ID)
-                .name(ProductName.of("4G RAM"))
-                .price(Money.of("150.00"))
+                .id(new ProductId())
+                .name(new ProductName("4GB RAM"))
+                .price(new Money("150"))
                 .inStock(true);
     }
 
     public static Product.ProductBuilder aProductAltMousePad() {
         return Product.builder()
-                .id(ALT_MOUSE_PAD_PRODUCT_ID)
-                .name(ProductName.of("Mouse pad"))
-                .price(Money.of("100.00"))
+                .id(new ProductId())
+                .name(new ProductName("Mouse Pad"))
+                .price(new Money("100"))
                 .inStock(true);
     }
 }
