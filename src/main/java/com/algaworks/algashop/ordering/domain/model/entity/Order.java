@@ -189,6 +189,10 @@ public class Order implements AggregateRoot<OrderId> {
         return OrderStatusEnum.PAID.equals(this.status());
     }
 
+    public boolean isReady() {
+        return OrderStatusEnum.READY.equals(this.status());
+    }
+
     public OrderId id() {
         return id;
     }
