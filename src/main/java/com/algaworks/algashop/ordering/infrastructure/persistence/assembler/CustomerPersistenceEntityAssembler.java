@@ -27,6 +27,7 @@ public class CustomerPersistenceEntityAssembler {
         customerPersistenceEntity.setArchivedAt(customer.archivedAt());
         customerPersistenceEntity.setLoyaltyPoints(customer.loyaltyPoints().value());
         customerPersistenceEntity.setAddress(toAddressEmbeddable(customer.address()));
+        customerPersistenceEntity.setVersion(customer.version());
         return customerPersistenceEntity;
     }
 
@@ -44,6 +45,4 @@ public class CustomerPersistenceEntityAssembler {
                 .zipCode(address.zipCode().value())
                 .build();
     }
-
-
 }

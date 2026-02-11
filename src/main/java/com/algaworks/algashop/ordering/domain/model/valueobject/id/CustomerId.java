@@ -15,10 +15,6 @@ public record CustomerId(UUID value) {
         this(IdGenerator.generateTimeBasedUUID());
     }
 
-    public CustomerId(Long id) {
-        this(UUID.fromString(id.toString()));
-    }
-
     @Override
     public String toString() {
         return value.toString();

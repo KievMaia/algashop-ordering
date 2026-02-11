@@ -30,7 +30,7 @@ public class ShoppingCartsPersistenceProvider implements ShoppingCarts {
 
     @Override
     public Optional<ShoppingCart> ofCustomer(CustomerId customerId) {
-        return persistenceRepository.findByCustomerId(customerId).map(disassembler::toDomainEntity);
+        return persistenceRepository.findByCustomer_Id(customerId.value()).map(disassembler::toDomainEntity);
     }
 
     @Override

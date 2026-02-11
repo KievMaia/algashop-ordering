@@ -21,7 +21,7 @@ public class CustomerPersistenceEntityDisassembler {
         return Customer.existing()
                 .id(new CustomerId(persistenceEntity.getId()))
                 .fullName(new FullName(persistenceEntity.getFirstName(),  persistenceEntity.getLastName()))
-                .birthDate(new BirthDate(persistenceEntity.getBirthDate()))
+                .birthDate(persistenceEntity.getBirthDate() != null ? new BirthDate(persistenceEntity.getBirthDate()) : null)
                 .email(new Email(persistenceEntity.getEmail()))
                 .phone(new Phone(persistenceEntity.getPhone()))
                 .document(new Document(persistenceEntity.getDocument()))
