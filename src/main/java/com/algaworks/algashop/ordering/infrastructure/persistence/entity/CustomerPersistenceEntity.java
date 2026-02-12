@@ -29,18 +29,17 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @ToString(of = "id")
-@Table(name = "\"customer\"")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@NoArgsConstructor
+@Table(name = "\"customer\"")
+@AllArgsConstructor
+@Builder
 @EntityListeners(AuditingEntityListener.class)
 public class CustomerPersistenceEntity {
-
     @Id
     @EqualsAndHashCode.Include
     private UUID id;
-
     private String firstName;
     private String lastName;
     private LocalDate birthDate;
@@ -51,8 +50,6 @@ public class CustomerPersistenceEntity {
     private Boolean archived;
     private OffsetDateTime registeredAt;
     private OffsetDateTime archivedAt;
-    private Integer loyaltyPoints;
-
     @Embedded
     @AttributeOverrides({
             @AttributeOverride(name = "street", column = @Column(name = "address_street")),
@@ -64,36 +61,17 @@ public class CustomerPersistenceEntity {
             @AttributeOverride(name = "zipCode", column = @Column(name = "address_zipCode"))
     })
     private AddressEmbeddable address;
-
-    @CreatedBy
-    private UUID createdByUserId;
-
-    @LastModifiedBy
-    private UUID lastModifiedByUserId;
-
-    @LastModifiedDate
-    private OffsetDateTime lastModifiedAt;
+    private Integer loyaltyPoints;
 
     @Version
     private Long version;
 
-    @Builder
-    public CustomerPersistenceEntity(UUID id, String firstName, String lastName, LocalDate birthDate, String email, String phone, String document, Boolean promotionNotificationsAllowed, Boolean archived, OffsetDateTime registeredAt, OffsetDateTime archivedAt, Integer loyaltyPoints, AddressEmbeddable address, UUID createdByUserId, UUID lastModifiedByUserId, OffsetDateTime lastModifiedAt) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.birthDate = birthDate;
-        this.email = email;
-        this.phone = phone;
-        this.document = document;
-        this.promotionNotificationsAllowed = promotionNotificationsAllowed;
-        this.archived = archived;
-        this.registeredAt = registeredAt;
-        this.archivedAt = archivedAt;
-        this.loyaltyPoints = loyaltyPoints;
-        this.address = address;
-        this.createdByUserId = createdByUserId;
-        this.lastModifiedByUserId = lastModifiedByUserId;
-        this.lastModifiedAt = lastModifiedAt;
-    }
+    @CreatedBy
+    private UUID createdByUserId;
+
+    @LastModifiedDate
+    private OffsetDateTime lastModifiedAt;
+
+    @LastModifiedBy
+    private UUID lastModifiedByUserId;
 }

@@ -5,7 +5,6 @@ import com.algaworks.algashop.ordering.domain.model.entity.customer.CustomerTest
 import com.algaworks.algashop.ordering.domain.model.entity.order.OrderTestDataBuilder;
 import com.algaworks.algashop.ordering.domain.model.entity.product.ProductTestDataBuilder;
 import com.algaworks.algashop.ordering.domain.model.valueobject.LoyaltyPoints;
-import com.algaworks.algashop.ordering.domain.model.valueobject.Product;
 import com.algaworks.algashop.ordering.domain.model.valueobject.Quantity;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;

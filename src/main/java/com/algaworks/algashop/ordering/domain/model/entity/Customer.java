@@ -34,10 +34,10 @@ public class Customer implements AggregateRoot<CustomerId> {
     private Long version;
 
     @Builder(builderClassName = "BrandNewCustomerBuild", builderMethodName = "brandNew")
-    private static Customer createBrandNew(FullName fullName, BirthDate birthDate, Email email, Phone phone, Document document,
-                                          Boolean promotionNotificationsAllowed, Address address) {
-        return new Customer(
-                new CustomerId(),
+    private static Customer createBrandNew(FullName fullName, BirthDate birthDate, Email email,
+                                           Phone phone, Document document, Boolean promotionNotificationsAllowed,
+                                           Address address) {
+        return new Customer(new CustomerId(),
                 null,
                 fullName,
                 birthDate,
@@ -53,9 +53,9 @@ public class Customer implements AggregateRoot<CustomerId> {
     }
 
     @Builder(builderClassName = "ExistingCustomerBuild", builderMethodName = "existing")
-    private Customer(CustomerId id, Long version, FullName fullName, BirthDate birthDate, Email email, Phone phone, Document document,
-                     Boolean promotionNotificationsAllowed, Boolean archived, OffsetDateTime registeredAt,
-                     OffsetDateTime archivedAt, LoyaltyPoints loyaltyPoints, Address address) {
+    private Customer(CustomerId id, Long version, FullName fullName, BirthDate birthDate, Email email, Phone phone,
+                     Document document, Boolean promotionNotificationsAllowed, Boolean archived,
+                     OffsetDateTime registeredAt, OffsetDateTime archivedAt, LoyaltyPoints loyaltyPoints, Address address) {
         this.setId(id);
         this.setVersion(version);
         this.setFullName(fullName);
@@ -72,7 +72,7 @@ public class Customer implements AggregateRoot<CustomerId> {
     }
 
     public void addLoyaltyPoints(LoyaltyPoints loyaltyPointsAdded) {
-        this.verifyIfChangeable();
+        verifyIfChangeable();
         if (loyaltyPointsAdded.equals(LoyaltyPoints.ZERO)) {
             return;
         }
@@ -80,40 +80,42 @@ public class Customer implements AggregateRoot<CustomerId> {
     }
 
     public void archived() {
-        this.verifyIfChangeable();
+        verifyIfChangeable();
         this.setArchived(true);
         this.setArchivedAt(OffsetDateTime.now());
         this.setFullName(new FullName("Anonymous", "Anonymous"));
         this.setPhone(new Phone("000-000-0000"));
-        this.setDocument(new Document("000-000-0000"));
+        this.setDocument(new Document("000-00-0000"));
         this.setEmail(new Email(UUID.randomUUID() + "@anonymous.com"));
         this.setBirthDate(null);
         this.setPromotionNotificationsAllowed(false);
-        this.setAddress(this.address.toBuilder().number("Anonymized").complement(null).build());
+        this.setAddress(this.address().toBuilder()
+                .number("Anonymized")
+                .complement(null).build());
     }
 
-    public void enablePromotionNotification() {
-        this.verifyIfChangeable();
+    public void enablePromotionNotifications() {
+        verifyIfChangeable();
         this.setPromotionNotificationsAllowed(true);
     }
 
-    public void disablePromotionNotification() {
-        this.verifyIfChangeable();
+    public void disablePromotionNotifications() {
+        verifyIfChangeable();
         this.setPromotionNotificationsAllowed(false);
     }
 
-    public void changeFullName(FullName fullName) {
-        this.verifyIfChangeable();
+    public void changeName(FullName fullName) {
+        verifyIfChangeable();
         this.setFullName(fullName);
     }
 
     public void changeEmail(Email email) {
-        this.verifyIfChangeable();
+        verifyIfChangeable();
         this.setEmail(email);
     }
 
     public void changePhone(Phone phone) {
-        this.verifyIfChangeable();
+        verifyIfChangeable();
         this.setPhone(phone);
     }
 
@@ -170,7 +172,13 @@ public class Customer implements AggregateRoot<CustomerId> {
         return address;
     }
 
-    public Long version() {return version;}
+    public Long version() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
 
     private void setId(CustomerId id) {
         Objects.requireNonNull(id);
@@ -232,10 +240,6 @@ public class Customer implements AggregateRoot<CustomerId> {
     private void setAddress(Address address) {
         Objects.requireNonNull(address);
         this.address = address;
-    }
-
-    private void setVersion(Long version) {
-        this.version = version;
     }
 
     private void verifyIfChangeable() {

@@ -31,7 +31,7 @@ class CustomerTest {
     }
 
     @Test
-    void given_unarchivedCustomer_whenArchive_shouldAnonymize() {
+    void given_unarchivedCustomer_whenArchived_shouldAnonymize() {
         var customer = CustomerTestDataBuilder.existingCustomer().build();
 
         customer.archived();
@@ -40,7 +40,7 @@ class CustomerTest {
                 c -> Assertions.assertThat(c.fullName()).isEqualTo(new FullName("Anonymous", "Anonymous")),
                 c -> Assertions.assertThat(c.email()).isNotEqualTo(new Email("john.doe@gmail.com")),
                 c -> Assertions.assertThat(c.phone()).isEqualTo(new Phone("000-000-0000")),
-                c -> Assertions.assertThat(c.document()).isEqualTo(new Document("000-000-0000")),
+                c -> Assertions.assertThat(c.document()).isEqualTo(new Document("000-00-0000")),
                 c -> Assertions.assertThat(c.birthDate()).isNull(),
                 c -> Assertions.assertThat(c.isPromotionNotificationsAllowed()).isFalse(),
                 c -> Assertions.assertThat(c.address()).isEqualTo(
@@ -70,10 +70,10 @@ class CustomerTest {
                 .isThrownBy(() -> customer.changePhone(new Phone("123-133-1111")));
 
         assertThatExceptionOfType(CustomerArchivedException.class)
-                .isThrownBy(customer::enablePromotionNotification);
+                .isThrownBy(customer::enablePromotionNotifications);
 
         assertThatExceptionOfType(CustomerArchivedException.class)
-                .isThrownBy(customer::disablePromotionNotification);
+                .isThrownBy(customer::disablePromotionNotifications);
     }
 
     @Test

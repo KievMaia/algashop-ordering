@@ -23,12 +23,12 @@ public class CustomerTestDataBuilder {
 
     public static Customer.BrandNewCustomerBuild brandNewCustomer() {
         return Customer.brandNew()
-                .fullName(new FullName("John", "Doe"))
-                .birthDate(new BirthDate(LocalDate.of(1991, 7, 5)))
-                .email(new Email("joe.doe@exemple.com"))
-                .phone(new Phone("478-256-2504"))
+                .fullName(new FullName("John","Doe"))
+                .birthDate(new BirthDate(LocalDate.of(1991, 7,5)))
+                .email(new Email("johndoe@email.com"))
+                .phone(new Phone("478-256-2604"))
                 .document(new Document("255-08-0578"))
-                .promotionNotificationsAllowed(false)
+                .promotionNotificationsAllowed(true)
                 .address(Address.builder()
                         .street("Bourbon Street")
                         .number("1134")
@@ -45,15 +45,15 @@ public class CustomerTestDataBuilder {
                 .id(DEFAULT_CUSTOMER_ID)
                 .registeredAt(OffsetDateTime.now())
                 .promotionNotificationsAllowed(true)
-                .loyaltyPoints(LoyaltyPoints.ZERO)
                 .archived(false)
                 .archivedAt(null)
-                .fullName(new FullName("John", "Doe"))
-                .birthDate(new BirthDate(LocalDate.of(1991, 7, 5)))
-                .email(new Email("joe.doe@exemple.com"))
-                .phone(new Phone("478-256-2504"))
+                .fullName(new FullName("John","Doe"))
+                .birthDate(new BirthDate(LocalDate.of(1991, 7,5)))
+                .email(new Email("johndoe@email.com"))
+                .phone(new Phone("478-256-2604"))
                 .document(new Document("255-08-0578"))
-                .promotionNotificationsAllowed(false)
+                .promotionNotificationsAllowed(true)
+                .loyaltyPoints(LoyaltyPoints.ZERO)
                 .address(Address.builder()
                         .street("Bourbon Street")
                         .number("1134")
@@ -62,7 +62,8 @@ public class CustomerTestDataBuilder {
                         .state("South California")
                         .zipCode(new ZipCode("12345"))
                         .complement("Apt. 114")
-                        .build());
+                        .build())
+                ;
     }
 
     public static Customer.ExistingCustomerBuild existingAnonymizedCustomer() {

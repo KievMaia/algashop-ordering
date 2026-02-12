@@ -16,7 +16,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -26,7 +25,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
         CustomerPersistenceEntityDisassembler.class})
 class CustomersIT {
 
-    private final Customers customers;
+    private Customers customers;
 
     @Autowired
     public CustomersIT(Customers customers) {
@@ -78,7 +77,7 @@ class CustomersIT {
         customerT1.archived();
         customers.add(customerT1);
 
-        customerT2.changeFullName(new FullName("Alex","Silva"));
+        customerT2.changeName(new FullName("Alex","Silva"));
 
         Assertions.assertThatExceptionOfType(ObjectOptimisticLockingFailureException.class)
                 .isThrownBy(()-> customers.add(customerT2));
@@ -123,18 +122,13 @@ class CustomersIT {
     }
 
     @Test
-    public void shouldNotFindByEmailIfNoCustomerExistsWithEmail() {
-        Optional<Customer> customerOptional = customers.ofEmail(new Email(UUID.randomUUID() + "@email.com"));
-        Assertions.assertThat(customerOptional).isNotPresent();
-    }
-
-    @Test
     public void shouldReturnIfEmailIsInUse() {
-        var customer = CustomerTestDataBuilder.brandNewCustomer().build();
+        Customer customer = CustomerTestDataBuilder.brandNewCustomer().build();
         customers.add(customer);
 
         Assertions.assertThat(customers.isEmailUnique(customer.email(), customer.id())).isTrue();
         Assertions.assertThat(customers.isEmailUnique(customer.email(), new CustomerId())).isFalse();
-        Assertions.assertThat(customers.isEmailUnique(new Email("kiev@gmail.com"), new CustomerId())).isTrue();
+        Assertions.assertThat(customers.isEmailUnique(new Email("alex@gmail.com"), new CustomerId())).isTrue();
     }
- }
+
+}

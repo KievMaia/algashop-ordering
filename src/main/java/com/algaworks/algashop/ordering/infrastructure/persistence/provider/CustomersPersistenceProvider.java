@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
 
+import java.lang.reflect.Field;
 import java.util.Optional;
 
 @Component
@@ -30,7 +31,8 @@ public class CustomersPersistenceProvider implements Customers {
 
     @Override
     public Optional<Customer> ofId(CustomerId customerId) {
-        return persistenceRepository.findById(customerId.value()).map(disassembler::toDomainEntity);
+        return persistenceRepository.findById(customerId.value())
+                .map(disassembler::toDomainEntity);
     }
 
     @Override
@@ -39,48 +41,52 @@ public class CustomersPersistenceProvider implements Customers {
     }
 
     @Override
+    @Transactional(readOnly = false)
+    public void add(Customer aggregateRoot) {
+        var customerId = aggregateRoot.id().value();
+
+        persistenceRepository.findById(customerId)
+                .ifPresentOrElse(
+                        (persistenceEntity) -> update(aggregateRoot, persistenceEntity),
+                        ()-> insert(aggregateRoot)
+                );
+    }
+
+    @Override
     public long count() {
         return persistenceRepository.count();
     }
 
     @Override
-    @Transactional(readOnly = false)
-    public void add(Customer aggregateRoot) {
-        var customerId = aggregateRoot.id().value();
-        persistenceRepository.findById(customerId).ifPresentOrElse(
-                (persistenceEntity) -> this.update(aggregateRoot, persistenceEntity),
-                () ->  this.insert(aggregateRoot)
-        );
-    }
-
-    private void insert(Customer aggregateRoot) {
-        var persistenceEntity = assembler.fromDomain(aggregateRoot);
-        persistenceRepository.saveAndFlush(persistenceEntity);
-        this.updateVersion(aggregateRoot, persistenceEntity);
-    }
-
-    private void update(Customer aggregateRoot, CustomerPersistenceEntity persistenceEntity) {
-        persistenceEntity = assembler.merge(persistenceEntity, aggregateRoot);
-        entityManager.detach(persistenceEntity);
-        persistenceEntity = persistenceRepository.saveAndFlush(persistenceEntity);
-        this.updateVersion(aggregateRoot, persistenceEntity);
-    }
-
-    @SneakyThrows
-    private void updateVersion(Customer aggregateRoot, CustomerPersistenceEntity persistenceEntity) {
-            var version = aggregateRoot.getClass().getDeclaredField("version");
-            version.setAccessible(true);
-            ReflectionUtils.setField(version, aggregateRoot, persistenceEntity.getVersion());
-            version.setAccessible(false);
-    }
-
-    @Override
     public Optional<Customer> ofEmail(Email email) {
-        return persistenceRepository.findByEmail(email.value()).map(disassembler::toDomainEntity);
+        return persistenceRepository.findByEmail(email.value())
+                .map(disassembler::toDomainEntity);
     }
 
     @Override
     public boolean isEmailUnique(Email email, CustomerId exceptCustomerId) {
         return !persistenceRepository.existsByEmailAndIdNot(email.value(), exceptCustomerId.value());
     }
+
+    private void update(Customer aggregateRoot, CustomerPersistenceEntity persistenceEntity) {
+        persistenceEntity = assembler.merge(persistenceEntity, aggregateRoot);
+        entityManager.detach(persistenceEntity);
+        persistenceEntity = persistenceRepository.saveAndFlush(persistenceEntity);
+        updateVersion(aggregateRoot, persistenceEntity);
+    }
+
+    private void insert(Customer aggregateRoot) {
+        CustomerPersistenceEntity persistenceEntity = assembler.fromDomain(aggregateRoot);
+        persistenceRepository.saveAndFlush(persistenceEntity);
+        updateVersion(aggregateRoot, persistenceEntity);
+    }
+
+    @SneakyThrows
+    private void updateVersion(Customer aggregateRoot, CustomerPersistenceEntity persistenceEntity) {
+        Field version = aggregateRoot.getClass().getDeclaredField("version");
+        version.setAccessible(true);
+        ReflectionUtils.setField(version, aggregateRoot, persistenceEntity.getVersion());
+        version.setAccessible(false);
+    }
+
 }
