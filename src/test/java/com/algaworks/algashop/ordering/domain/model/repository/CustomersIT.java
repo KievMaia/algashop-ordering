@@ -25,7 +25,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
         CustomerPersistenceEntityDisassembler.class})
 class CustomersIT {
 
-    private Customers customers;
+    private final Customers customers;
 
     @Autowired
     public CustomersIT(Customers customers) {
