@@ -40,15 +40,13 @@ public class CheckoutService {
     }
 
     private void addItemsToOrder(ShoppingCart shoppingCart, Order order) {
-        shoppingCart.items().forEach(item -> {
-            order.addItem(Product.builder()
-                            .id(new ProductId())
-                            .name(item.name())
-                            .price(new Money(item.price().value()))
-                            .inStock(item.isAvailable())
-                    .build(),
-                    item.quantity());
-        });
+        shoppingCart.items().forEach(item -> order.addItem(Product.builder()
+                        .id(new ProductId())
+                        .name(item.name())
+                        .price(new Money(item.price().value()))
+                        .inStock(item.isAvailable())
+                .build(),
+                item.quantity()));
     }
 
     private void verifyUnavailableItemsOrEmptyShoppingCart(ShoppingCart shoppingCart) {
