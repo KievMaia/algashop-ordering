@@ -39,11 +39,10 @@ import org.springframework.transaction.annotation.Transactional;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class ShoppingCartUpdateProviderIT {
 
-    private ShoppingCartsPersistenceProvider persistenceProvider;
-    private CustomersPersistenceProvider customersPersistenceProvider;
-    private ShoppingCartPersistenceEntityRepository entityRepository;
+    private final ShoppingCartsPersistenceProvider persistenceProvider;
+    private final CustomersPersistenceProvider customersPersistenceProvider;
 
-    private ShoppingCartUpdateProvider shoppingCartUpdateProvider;
+    private final ShoppingCartUpdateProvider shoppingCartUpdateProvider;
 
     @Autowired
     public ShoppingCartUpdateProviderIT(ShoppingCartsPersistenceProvider persistenceProvider,
@@ -52,7 +51,6 @@ class ShoppingCartUpdateProviderIT {
                                         ShoppingCartUpdateProvider shoppingCartUpdateProvider) {
         this.persistenceProvider = persistenceProvider;
         this.customersPersistenceProvider = customersPersistenceProvider;
-        this.entityRepository = entityRepository;
         this.shoppingCartUpdateProvider = shoppingCartUpdateProvider;
     }
 
