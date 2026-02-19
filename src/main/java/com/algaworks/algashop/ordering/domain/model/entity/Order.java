@@ -14,6 +14,7 @@ import com.algaworks.algashop.ordering.domain.model.valueobject.Shipping;
 import com.algaworks.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import com.algaworks.algashop.ordering.domain.model.valueobject.id.OrderId;
 import com.algaworks.algashop.ordering.domain.model.valueobject.id.OrderItemId;
+import com.algaworks.algashop.ordering.domain.model.valueobject.id.ProductId;
 import lombok.Builder;
 
 import java.math.BigDecimal;

@@ -1,5 +1,6 @@
 package com.algaworks.algashop.ordering.domain.model.entity;
 
+import com.algaworks.algashop.ordering.domain.model.exception.ShoppingCartCantProceedToCheckoutException;
 import com.algaworks.algashop.ordering.domain.model.exception.ShoppingCartDoesNotContainItemException;
 import com.algaworks.algashop.ordering.domain.model.exception.ShoppingCartDoesNotContainProductException;
 import com.algaworks.algashop.ordering.domain.model.valueobject.Money;
@@ -109,6 +110,12 @@ public class ShoppingCart implements AggregateRoot<ShoppingCartId> {
         var shoppingCartItem = this.findShoppingCartItem(shoppingCartItemId);
         shoppingCartItem.changeQuantity(quantity);
         this.recalculateTotals();
+    }
+
+    public void ensureIsReadyForCheckout() {
+        if (this.isEmpty() || this.containsUnavailableItems()) {
+            throw new ShoppingCartCantProceedToCheckoutException();
+        }
     }
 
     public boolean containsUnavailableItems() {
