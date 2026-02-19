@@ -14,7 +14,6 @@ import com.algaworks.algashop.ordering.infrastructure.persistence.assembler.Cust
 import com.algaworks.algashop.ordering.infrastructure.persistence.assembler.ShoppingCartPersistenceEntityAssembler;
 import com.algaworks.algashop.ordering.infrastructure.persistence.disassembler.CustomerPersistenceEntityDisassembler;
 import com.algaworks.algashop.ordering.infrastructure.persistence.disassembler.ShoppingCartPersistenceEntityDisassembler;
-import com.algaworks.algashop.ordering.infrastructure.persistence.repository.ShoppingCartPersistenceEntityRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,7 +46,6 @@ class ShoppingCartUpdateProviderIT {
     @Autowired
     public ShoppingCartUpdateProviderIT(ShoppingCartsPersistenceProvider persistenceProvider,
                                         CustomersPersistenceProvider customersPersistenceProvider,
-                                        ShoppingCartPersistenceEntityRepository entityRepository,
                                         ShoppingCartUpdateProvider shoppingCartUpdateProvider) {
         this.persistenceProvider = persistenceProvider;
         this.customersPersistenceProvider = customersPersistenceProvider;
