@@ -8,16 +8,13 @@ import com.algaworks.algashop.ordering.domain.model.repository.ShoppingCarts;
 import com.algaworks.algashop.ordering.domain.model.utility.DomainService;
 import com.algaworks.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @DomainService
 @RequiredArgsConstructor
 public class ShoppingService {
 
-    @Autowired
     private final Customers customers;
 
-    @Autowired
     private final ShoppingCarts shoppingCarts;
 
     public ShoppingCart startShopping(CustomerId customerId) {
@@ -27,10 +24,10 @@ public class ShoppingService {
     }
 
     private void checkIfTheShoppingCartAlreadyExists(CustomerId customerId) {
-        shoppingCarts.ofCustomer(customerId).orElseThrow(CustomerAlreadyHaveShoppingCartException::new);
+        if (shoppingCarts.ofCustomer(customerId).isPresent()) throw new CustomerAlreadyHaveShoppingCartException();
     }
 
     private void verifyIfCustomerExists(CustomerId customerId) {
-        customers.ofId(customerId).orElseThrow(CustomerNotFoundException::new);
+        if(!customers.exists(customerId)) throw  new CustomerNotFoundException();
     }
 }
