@@ -5,7 +5,7 @@ import com.algaworks.algashop.ordering.domain.model.customer.CustomerTestDataBui
 import com.algaworks.algashop.ordering.domain.model.order.OrderTestDataBuilder;
 import com.algaworks.algashop.ordering.infrastructure.persistence.assembler.CustomerPersistenceEntityAssembler;
 import com.algaworks.algashop.ordering.infrastructure.persistence.assembler.OrderPersistenceEntityAssembler;
-import com.algaworks.algashop.ordering.config.SpringDataAuditingConfig;
+import com.algaworks.algashop.ordering.infrastructure.persistence.config.SpringDataAuditingConfig;
 import com.algaworks.algashop.ordering.infrastructure.persistence.disassembler.CustomerPersistenceEntityDisassembler;
 import com.algaworks.algashop.ordering.infrastructure.persistence.disassembler.OrderPersistenceEntityDisassembler;
 import com.algaworks.algashop.ordering.infrastructure.persistence.repository.OrderPersistenceEntityRepository;

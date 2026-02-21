@@ -1,4 +1,4 @@
-package com.algaworks.algashop.ordering.config;
+package com.algaworks.algashop.ordering.infrastructure.persistence.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

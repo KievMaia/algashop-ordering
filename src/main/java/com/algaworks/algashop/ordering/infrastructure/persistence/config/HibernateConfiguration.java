@@ -1,4 +1,4 @@
-package com.algaworks.algashop.ordering.config;
+package com.algaworks.algashop.ordering.infrastructure.persistence.config;
 
 import org.hibernate.boot.model.naming.ImplicitNamingStrategy;
 import org.hibernate.boot.model.naming.ImplicitNamingStrategyComponentPathImpl;

@@ -1,6 +1,6 @@
 package com.algaworks.algashop.ordering.infrastructure.persistence.provider;
 
-import com.algaworks.algashop.ordering.config.SpringDataAuditingConfig;
+import com.algaworks.algashop.ordering.infrastructure.persistence.config.SpringDataAuditingConfig;
 import com.algaworks.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
 import com.algaworks.algashop.ordering.domain.model.product.ProductTestDataBuilder;
 import com.algaworks.algashop.ordering.domain.model.shoppingcart.ShoppingCartTestDataBuilder;
