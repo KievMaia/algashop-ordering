@@ -1,12 +1,13 @@
 package com.algaworks.algashop.ordering.domain.model.service;
 
-import com.algaworks.algashop.ordering.domain.model.entity.PaymentMethodEnum;
-import com.algaworks.algashop.ordering.domain.model.entity.order.OrderTestDataBuilder;
-import com.algaworks.algashop.ordering.domain.model.entity.product.ProductTestDataBuilder;
-import com.algaworks.algashop.ordering.domain.model.exception.ProductOutOfStockException;
-import com.algaworks.algashop.ordering.domain.model.valueobject.Money;
-import com.algaworks.algashop.ordering.domain.model.valueobject.Quantity;
-import com.algaworks.algashop.ordering.domain.model.valueobject.id.CustomerId;
+import com.algaworks.algashop.ordering.domain.model.order.BuyNowService;
+import com.algaworks.algashop.ordering.domain.model.order.PaymentMethodEnum;
+import com.algaworks.algashop.ordering.domain.model.order.OrderTestDataBuilder;
+import com.algaworks.algashop.ordering.domain.model.product.ProductTestDataBuilder;
+import com.algaworks.algashop.ordering.domain.model.product.ProductOutOfStockException;
+import com.algaworks.algashop.ordering.domain.model.commons.Money;
+import com.algaworks.algashop.ordering.domain.model.commons.Quantity;
+import com.algaworks.algashop.ordering.domain.model.customer.CustomerId;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

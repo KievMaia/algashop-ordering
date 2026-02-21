@@ -1,5 +1,6 @@
 package com.algaworks.algashop.ordering.domain.model.valueobject;
 
+import com.algaworks.algashop.ordering.domain.model.customer.LoyaltyPoints;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;

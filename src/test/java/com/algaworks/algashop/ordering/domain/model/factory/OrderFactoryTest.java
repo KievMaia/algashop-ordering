@@ -1,10 +1,11 @@
 package com.algaworks.algashop.ordering.domain.model.factory;
 
-import com.algaworks.algashop.ordering.domain.model.entity.order.OrderTestDataBuilder;
-import com.algaworks.algashop.ordering.domain.model.entity.PaymentMethodEnum;
-import com.algaworks.algashop.ordering.domain.model.entity.product.ProductTestDataBuilder;
-import com.algaworks.algashop.ordering.domain.model.valueobject.Quantity;
-import com.algaworks.algashop.ordering.domain.model.valueobject.id.CustomerId;
+import com.algaworks.algashop.ordering.domain.model.order.OrderTestDataBuilder;
+import com.algaworks.algashop.ordering.domain.model.order.OrderFactory;
+import com.algaworks.algashop.ordering.domain.model.order.PaymentMethodEnum;
+import com.algaworks.algashop.ordering.domain.model.product.ProductTestDataBuilder;
+import com.algaworks.algashop.ordering.domain.model.commons.Quantity;
+import com.algaworks.algashop.ordering.domain.model.customer.CustomerId;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 

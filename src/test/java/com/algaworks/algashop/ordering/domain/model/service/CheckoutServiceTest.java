@@ -1,13 +1,14 @@
 package com.algaworks.algashop.ordering.domain.model.service;
 
-import com.algaworks.algashop.ordering.domain.model.entity.PaymentMethodEnum;
-import com.algaworks.algashop.ordering.domain.model.entity.ShoppingCart;
-import com.algaworks.algashop.ordering.domain.model.entity.order.OrderTestDataBuilder;
-import com.algaworks.algashop.ordering.domain.model.entity.product.ProductTestDataBuilder;
-import com.algaworks.algashop.ordering.domain.model.entity.shoppingcart.ShoppingCartTestDataBuilder;
-import com.algaworks.algashop.ordering.domain.model.exception.ShoppingCartCantProceedToCheckoutException;
-import com.algaworks.algashop.ordering.domain.model.valueobject.Product;
-import com.algaworks.algashop.ordering.domain.model.valueobject.Quantity;
+import com.algaworks.algashop.ordering.domain.model.order.CheckoutService;
+import com.algaworks.algashop.ordering.domain.model.order.PaymentMethodEnum;
+import com.algaworks.algashop.ordering.domain.model.shoppingcart.ShoppingCart;
+import com.algaworks.algashop.ordering.domain.model.order.OrderTestDataBuilder;
+import com.algaworks.algashop.ordering.domain.model.product.ProductTestDataBuilder;
+import com.algaworks.algashop.ordering.domain.model.shoppingcart.ShoppingCartTestDataBuilder;
+import com.algaworks.algashop.ordering.domain.model.shoppingcart.ShoppingCartCantProceedToCheckoutException;
+import com.algaworks.algashop.ordering.domain.model.product.Product;
+import com.algaworks.algashop.ordering.domain.model.commons.Quantity;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

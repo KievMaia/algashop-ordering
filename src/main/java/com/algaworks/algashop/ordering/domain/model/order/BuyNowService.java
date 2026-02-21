@@ -1,0 +1,31 @@
+package com.algaworks.algashop.ordering.domain.model.order;
+
+import com.algaworks.algashop.ordering.domain.model.DomainService;
+import com.algaworks.algashop.ordering.domain.model.product.Product;
+import com.algaworks.algashop.ordering.domain.model.commons.Quantity;
+import com.algaworks.algashop.ordering.domain.model.customer.CustomerId;
+
+@DomainService
+public class BuyNowService {
+
+    public Order buyNow(Product product,
+                        CustomerId customerId,
+                        Billing billing,
+                        Shipping shipping,
+                        Quantity quantity,
+                        PaymentMethodEnum paymentMethodEnum) {
+
+        product.checkOutOfStock();
+
+        var order = Order.draft(customerId);
+        order.changeBilling(billing);
+        order.changeShipping(shipping);
+        order.changePaymentMethod(paymentMethodEnum);
+
+        order.addItem(product, quantity);
+
+        order.place();
+
+        return order;
+    }
+}

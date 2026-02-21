@@ -1,6 +1,8 @@
 package com.algaworks.algashop.ordering.domain.model.service;
 
-import com.algaworks.algashop.ordering.domain.model.valueobject.ZipCode;
+import com.algaworks.algashop.ordering.domain.model.commons.ZipCode;
+import com.algaworks.algashop.ordering.domain.model.order.shipping.OriginAddressService;
+import com.algaworks.algashop.ordering.domain.model.order.shipping.ShippingCostService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +22,7 @@ class ShippingCostServiceIT {
         var origin = originAddressService.originAddress().zipCode();
         var destination = new ZipCode("12345");
 
-        var calculated = shippingCostService.calculateShippingCost(
+        var calculated = shippingCostService.calculate(
                 new ShippingCostService.CalculationRequest(
                         origin,
                         destination

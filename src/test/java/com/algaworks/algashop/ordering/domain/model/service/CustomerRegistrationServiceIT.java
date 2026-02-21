@@ -1,12 +1,13 @@
 package com.algaworks.algashop.ordering.domain.model.service;
 
-import com.algaworks.algashop.ordering.domain.model.valueobject.Address;
-import com.algaworks.algashop.ordering.domain.model.valueobject.BirthDate;
-import com.algaworks.algashop.ordering.domain.model.valueobject.Document;
-import com.algaworks.algashop.ordering.domain.model.valueobject.Email;
-import com.algaworks.algashop.ordering.domain.model.valueobject.FullName;
-import com.algaworks.algashop.ordering.domain.model.valueobject.Phone;
-import com.algaworks.algashop.ordering.domain.model.valueobject.ZipCode;
+import com.algaworks.algashop.ordering.domain.model.commons.Address;
+import com.algaworks.algashop.ordering.domain.model.customer.BirthDate;
+import com.algaworks.algashop.ordering.domain.model.commons.Document;
+import com.algaworks.algashop.ordering.domain.model.commons.Email;
+import com.algaworks.algashop.ordering.domain.model.commons.FullName;
+import com.algaworks.algashop.ordering.domain.model.commons.Phone;
+import com.algaworks.algashop.ordering.domain.model.commons.ZipCode;
+import com.algaworks.algashop.ordering.domain.model.customer.CustomerRegistrationService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

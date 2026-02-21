@@ -1,8 +1,8 @@
 package com.algaworks.algashop.ordering.infrastructure.persistence.provider;
 
-import com.algaworks.algashop.ordering.domain.model.entity.OrderStatusEnum;
-import com.algaworks.algashop.ordering.domain.model.entity.customer.CustomerTestDataBuilder;
-import com.algaworks.algashop.ordering.domain.model.entity.order.OrderTestDataBuilder;
+import com.algaworks.algashop.ordering.domain.model.order.OrderStatusEnum;
+import com.algaworks.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
+import com.algaworks.algashop.ordering.domain.model.order.OrderTestDataBuilder;
 import com.algaworks.algashop.ordering.infrastructure.persistence.assembler.CustomerPersistenceEntityAssembler;
 import com.algaworks.algashop.ordering.infrastructure.persistence.assembler.OrderPersistenceEntityAssembler;
 import com.algaworks.algashop.ordering.config.SpringDataAuditingConfig;

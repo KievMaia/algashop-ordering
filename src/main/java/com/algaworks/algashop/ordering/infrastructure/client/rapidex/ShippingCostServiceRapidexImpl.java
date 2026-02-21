@@ -1,7 +1,7 @@
 package com.algaworks.algashop.ordering.infrastructure.client.rapidex;
 
-import com.algaworks.algashop.ordering.domain.model.service.ShippingCostService;
-import com.algaworks.algashop.ordering.domain.model.valueobject.Money;
+import com.algaworks.algashop.ordering.domain.model.commons.Money;
+import com.algaworks.algashop.ordering.domain.model.order.shipping.ShippingCostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
@@ -16,7 +16,7 @@ public class ShippingCostServiceRapidexImpl implements ShippingCostService {
     private final RapiDexAPIClient rapiDexApiClient;
 
     @Override
-    public CalculationResult calculateShippingCost(CalculationRequest request) {
+    public CalculationResult calculate(CalculationRequest request) {
         var response = rapiDexApiClient.calculate(
                 new DeliveryCostRequest(
                         request.origin().value(),

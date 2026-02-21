@@ -1,5 +1,7 @@
 package com.algaworks.algashop.ordering.domain.model.valueobject;
 
+import com.algaworks.algashop.ordering.domain.model.commons.Money;
+import com.algaworks.algashop.ordering.domain.model.commons.Quantity;
 import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.math.RoundingMode;

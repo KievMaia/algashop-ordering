@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
-import static com.algaworks.algashop.ordering.domain.model.entity.customer.CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID;
+import static com.algaworks.algashop.ordering.domain.model.customer.CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID;
 
 public class CustomerPersistenceEntityTestDataBuilder {
 

@@ -1,6 +1,9 @@
 package com.algaworks.algashop.ordering.domain.model.valueobject;
 
-import com.algaworks.algashop.ordering.domain.model.entity.order.OrderTestDataBuilder;
+import com.algaworks.algashop.ordering.domain.model.commons.Document;
+import com.algaworks.algashop.ordering.domain.model.commons.FullName;
+import com.algaworks.algashop.ordering.domain.model.commons.Phone;
+import com.algaworks.algashop.ordering.domain.model.order.OrderTestDataBuilder;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

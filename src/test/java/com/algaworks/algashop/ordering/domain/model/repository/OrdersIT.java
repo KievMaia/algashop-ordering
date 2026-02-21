@@ -1,11 +1,13 @@
 package com.algaworks.algashop.ordering.domain.model.repository;
 
-import com.algaworks.algashop.ordering.domain.model.entity.OrderStatusEnum;
-import com.algaworks.algashop.ordering.domain.model.entity.customer.CustomerTestDataBuilder;
-import com.algaworks.algashop.ordering.domain.model.entity.order.OrderTestDataBuilder;
-import com.algaworks.algashop.ordering.domain.model.valueobject.Money;
-import com.algaworks.algashop.ordering.domain.model.valueobject.id.CustomerId;
-import com.algaworks.algashop.ordering.domain.model.valueobject.id.OrderId;
+import com.algaworks.algashop.ordering.domain.model.customer.Customers;
+import com.algaworks.algashop.ordering.domain.model.order.OrderStatusEnum;
+import com.algaworks.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
+import com.algaworks.algashop.ordering.domain.model.order.OrderTestDataBuilder;
+import com.algaworks.algashop.ordering.domain.model.order.Orders;
+import com.algaworks.algashop.ordering.domain.model.commons.Money;
+import com.algaworks.algashop.ordering.domain.model.customer.CustomerId;
+import com.algaworks.algashop.ordering.domain.model.order.OrderId;
 import com.algaworks.algashop.ordering.infrastructure.persistence.assembler.CustomerPersistenceEntityAssembler;
 import com.algaworks.algashop.ordering.infrastructure.persistence.assembler.OrderPersistenceEntityAssembler;
 import com.algaworks.algashop.ordering.infrastructure.persistence.disassembler.CustomerPersistenceEntityDisassembler;
@@ -22,7 +24,7 @@ import org.springframework.orm.ObjectOptimisticLockingFailureException;
 
 import java.time.Year;
 
-import static com.algaworks.algashop.ordering.domain.model.entity.customer.CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID;
+import static com.algaworks.algashop.ordering.domain.model.customer.CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
