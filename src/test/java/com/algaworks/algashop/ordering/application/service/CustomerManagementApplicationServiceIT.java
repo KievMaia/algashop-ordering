@@ -39,5 +39,14 @@ class CustomerManagementApplicationServiceIT {
         var customerId = customerManagementApplicationService.create(input);
 
         Assertions.assertThat(customerId).isNotNull();
+
+        var customerOutput = customerManagementApplicationService.findById(customerId);
+
+        Assertions.assertThat(customerOutput.getId()).isEqualTo(customerId);
+        Assertions.assertThat(customerOutput.getFirstName()).isEqualTo("John");
+        Assertions.assertThat(customerOutput.getLastName()).isEqualTo("Doe");
+        Assertions.assertThat(customerOutput.getEmail()).isEqualTo("johndoe@email.com");
+        Assertions.assertThat(customerOutput.getBirthDate()).isEqualTo(LocalDate.of(1987, 11, 5));
+        Assertions.assertThat(customerOutput.getRegisteredAt()).isNotNull();
     }
 }
