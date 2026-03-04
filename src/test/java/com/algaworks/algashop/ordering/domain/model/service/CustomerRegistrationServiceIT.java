@@ -42,6 +42,6 @@ class CustomerRegistrationServiceIT {
         );
 
         Assertions.assertThat(customer.fullName()).isEqualTo(new FullName("John", "Doe"));
-        Assertions.assertThat(customer.email()).isEqualTo(new Email("johndoe@email.com"));
+        Assertions.assertThat(customer.email()).isEqualTo(new Email("johndoe@gmail.com"));
     }
 }
