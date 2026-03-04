@@ -26,7 +26,7 @@ class CustomerRegistrationServiceIT {
         var customer = customerRegistrationService.register(
                 new FullName("John","Doe"),
                 new BirthDate(LocalDate.of(1991, 7,5)),
-                new Email("johndoe@email.com"),
+                new Email("johndoe@gmail.com"),
                 new Phone("478-256-2604"),
                 new Document("255-08-0578"),
                 true,
