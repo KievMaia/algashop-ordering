@@ -5,7 +5,6 @@ import com.algaworks.algashop.ordering.application.utility.Mapper;
 import com.algaworks.algashop.ordering.domain.model.commons.FullName;
 import com.algaworks.algashop.ordering.domain.model.customer.BirthDate;
 import com.algaworks.algashop.ordering.domain.model.customer.Customer;
-import com.algaworks.algashop.ordering.domain.model.customer.CustomerRegistrationService;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
