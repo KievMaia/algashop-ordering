@@ -5,10 +5,15 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 
+import static com.algaworks.algashop.ordering.application.customer.management.CustomerInputTestDateBuilder.aCustomer;
+import static com.algaworks.algashop.ordering.application.customer.management.CustomerUpdateInputTestDataBuilder.aCustomerUpdateInput;
+
 @SpringBootTest
+@Transactional
 class CustomerManagementApplicationServiceIT {
 
     @Autowired
@@ -16,24 +21,7 @@ class CustomerManagementApplicationServiceIT {
 
     @Test
     public void shouldRegister() {
-        var input = CustomerInput.builder()
-                .firstName("John")
-                .lastName("Doe")
-                .birthDate(LocalDate.of(1987, 11, 5))
-                .document("255-08-0578")
-                .phone("478-256-2604")
-                .email("johndoe@email.com")
-                .promotionNotificationsAllowed(false)
-                .address(AddressData.builder()
-                                 .street("Bourbon Street")
-                                 .number("1200")
-                                 .complement("Apt. 901")
-                                 .neighborhood("North Ville")
-                                 .city("YostFort")
-                                 .state("South Carolina")
-                                 .zipCode("70283")
-                                 .build())
-                .build();
+        var input = aCustomer().build();
 
         var customerId = customerManagementApplicationService.create(input);
 
@@ -41,24 +29,96 @@ class CustomerManagementApplicationServiceIT {
 
         var customerOutput = customerManagementApplicationService.findById(customerId);
 
-        Assertions.assertThat(customerOutput.getFirstName()).isEqualTo(input.getFirstName());
-        Assertions.assertThat(customerOutput.getLastName()).isEqualTo(input.getLastName());
-        Assertions.assertThat(customerOutput.getBirthDate()).isEqualTo(input.getBirthDate());
-        Assertions.assertThat(customerOutput.getDocument()).isEqualTo(input.getDocument());
-        Assertions.assertThat(customerOutput.getPhone()).isEqualTo(input.getPhone());
-        Assertions.assertThat(customerOutput.getEmail()).isEqualTo(input.getEmail());
-        Assertions.assertThat(customerOutput.getPromotionNotificationsAllowed())
-                .isEqualTo(input.getPromotionNotificationsAllowed());
+        Assertions.assertThat(customerOutput)
+                .extracting(
+                        CustomerOutput::getId,
+                        CustomerOutput::getFirstName,
+                        CustomerOutput::getLastName,
+                        CustomerOutput::getBirthDate,
+                        CustomerOutput::getDocument,
+                        CustomerOutput::getPhone,
+                        CustomerOutput::getEmail,
+                        CustomerOutput::getPromotionNotificationsAllowed
+                ).containsExactly(
+                        customerId,
+                        input.getFirstName(),
+                        input.getLastName(),
+                        input.getBirthDate(),
+                        input.getDocument(),
+                        input.getPhone(),
+                        input.getEmail(),
+                        input.getPromotionNotificationsAllowed()
+                );
+
+        Assertions.assertThat(customerOutput.getAddress())
+                .extracting(
+                        AddressData::getStreet,
+                        AddressData::getNumber,
+                        AddressData::getComplement,
+                        AddressData::getNeighborhood,
+                        AddressData::getCity,
+                        AddressData::getState,
+                        AddressData::getZipCode
+                ).containsExactly(
+                        input.getAddress().getStreet(),
+                        input.getAddress().getNumber(),
+                        input.getAddress().getComplement(),
+                        input.getAddress().getNeighborhood(),
+                        input.getAddress().getCity(),
+                        input.getAddress().getState(),
+                        input.getAddress().getZipCode()
+                );
 
         Assertions.assertThat(customerOutput.getRegisteredAt()).isNotNull();
+    }
 
-        Assertions.assertThat(customerOutput.getAddress()).isNotNull();
-        Assertions.assertThat(customerOutput.getAddress().getStreet()).isEqualTo(input.getAddress().getStreet());
-        Assertions.assertThat(customerOutput.getAddress().getNumber()).isEqualTo(input.getAddress().getNumber());
-        Assertions.assertThat(customerOutput.getAddress().getComplement()).isEqualTo(input.getAddress().getComplement());
-        Assertions.assertThat(customerOutput.getAddress().getNeighborhood()).isEqualTo(input.getAddress().getNeighborhood());
-        Assertions.assertThat(customerOutput.getAddress().getCity()).isEqualTo(input.getAddress().getCity());
-        Assertions.assertThat(customerOutput.getAddress().getState()).isEqualTo(input.getAddress().getState());
-        Assertions.assertThat(customerOutput.getAddress().getZipCode()).isEqualTo(input.getAddress().getZipCode());
+    @Test
+    public void shouldUpdate() {
+        var input = aCustomer().build();
+        var customerUpdateInput = aCustomerUpdateInput().build();
+
+        var customerId = customerManagementApplicationService.create(input);
+
+        Assertions.assertThat(customerId).isNotNull();
+
+        customerManagementApplicationService.update(customerId, customerUpdateInput);
+
+        var customerOutput = customerManagementApplicationService.findById(customerId);
+
+        Assertions.assertThat(customerOutput)
+                .extracting(
+                        CustomerOutput::getId,
+                        CustomerOutput::getFirstName,
+                        CustomerOutput::getLastName,
+                        CustomerOutput::getPhone,
+                        CustomerOutput::getPromotionNotificationsAllowed
+                ).containsExactly(
+                        customerId,
+                        customerUpdateInput.getFirstName(),
+                        customerUpdateInput.getLastName(),
+                        customerUpdateInput.getPhone(),
+                        customerUpdateInput.getPromotionNotificationsAllowed()
+                );
+
+        Assertions.assertThat(customerOutput.getAddress())
+                .extracting(
+                        AddressData::getStreet,
+                        AddressData::getNumber,
+                        AddressData::getComplement,
+                        AddressData::getNeighborhood,
+                        AddressData::getCity,
+                        AddressData::getState,
+                        AddressData::getZipCode
+                ).containsExactly(
+                        customerUpdateInput.getAddress().getStreet(),
+                        customerUpdateInput.getAddress().getNumber(),
+                        customerUpdateInput.getAddress().getComplement(),
+                        customerUpdateInput.getAddress().getNeighborhood(),
+                        customerUpdateInput.getAddress().getCity(),
+                        customerUpdateInput.getAddress().getState(),
+                        customerUpdateInput.getAddress().getZipCode()
+                );
+
+        Assertions.assertThat(customerOutput.getRegisteredAt()).isNotNull();
     }
 }

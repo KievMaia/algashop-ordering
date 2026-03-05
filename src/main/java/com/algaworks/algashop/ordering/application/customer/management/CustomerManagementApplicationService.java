@@ -1,5 +1,6 @@
 package com.algaworks.algashop.ordering.application.customer.management;
 
+import com.algaworks.algashop.ordering.application.commons.AddressData;
 import com.algaworks.algashop.ordering.application.utility.Mapper;
 import com.algaworks.algashop.ordering.domain.model.commons.*;
 import com.algaworks.algashop.ordering.domain.model.customer.*;
@@ -54,5 +55,37 @@ public class CustomerManagementApplicationService {
         ).orElseThrow(CustomerNotFoundException::new);
 
         return mapper.convert(customer, CustomerOutput.class);
+    }
+
+    @Transactional
+    public void update(UUID rawCustomerId, CustomerUpdateInput input) {
+        Objects.requireNonNull(input);
+        Objects.requireNonNull(rawCustomerId);
+
+        var customer = customers.ofId(new CustomerId(rawCustomerId))
+                .orElseThrow(CustomerNotFoundException::new);
+
+        customer.changeName(new FullName(input.getFirstName(), input.getLastName()));
+        customer.changePhone(new Phone(input.getPhone()));
+
+        if (Boolean.TRUE.equals(input.getPromotionNotificationsAllowed())) {
+            customer.enablePromotionNotifications();
+        } else  {
+            customer.disablePromotionNotifications();
+        }
+
+        var address = input.getAddress();
+
+        customer.changeAddress(Address.builder()
+                                       .zipCode(new ZipCode(address.getZipCode()))
+                                       .state(address.getState())
+                                       .city(address.getCity())
+                                       .neighborhood(address.getNeighborhood())
+                                       .street(address.getStreet())
+                                       .number(address.getNumber())
+                                       .complement(address.getComplement())
+                                       .build());
+
+        customers.add(customer);
     }
 }
