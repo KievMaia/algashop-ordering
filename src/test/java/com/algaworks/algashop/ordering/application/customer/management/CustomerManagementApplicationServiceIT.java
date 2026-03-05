@@ -41,11 +41,24 @@ class CustomerManagementApplicationServiceIT {
 
         var customerOutput = customerManagementApplicationService.findById(customerId);
 
-        Assertions.assertThat(customerOutput.getId()).isEqualTo(customerId);
-        Assertions.assertThat(customerOutput.getFirstName()).isEqualTo("John");
-        Assertions.assertThat(customerOutput.getLastName()).isEqualTo("Doe");
-        Assertions.assertThat(customerOutput.getEmail()).isEqualTo("johndoe@email.com");
-        Assertions.assertThat(customerOutput.getBirthDate()).isEqualTo(LocalDate.of(1987, 11, 5));
+        Assertions.assertThat(customerOutput.getFirstName()).isEqualTo(input.getFirstName());
+        Assertions.assertThat(customerOutput.getLastName()).isEqualTo(input.getLastName());
+        Assertions.assertThat(customerOutput.getBirthDate()).isEqualTo(input.getBirthDate());
+        Assertions.assertThat(customerOutput.getDocument()).isEqualTo(input.getDocument());
+        Assertions.assertThat(customerOutput.getPhone()).isEqualTo(input.getPhone());
+        Assertions.assertThat(customerOutput.getEmail()).isEqualTo(input.getEmail());
+        Assertions.assertThat(customerOutput.getPromotionNotificationsAllowed())
+                .isEqualTo(input.getPromotionNotificationsAllowed());
+
         Assertions.assertThat(customerOutput.getRegisteredAt()).isNotNull();
+
+        Assertions.assertThat(customerOutput.getAddress()).isNotNull();
+        Assertions.assertThat(customerOutput.getAddress().getStreet()).isEqualTo(input.getAddress().getStreet());
+        Assertions.assertThat(customerOutput.getAddress().getNumber()).isEqualTo(input.getAddress().getNumber());
+        Assertions.assertThat(customerOutput.getAddress().getComplement()).isEqualTo(input.getAddress().getComplement());
+        Assertions.assertThat(customerOutput.getAddress().getNeighborhood()).isEqualTo(input.getAddress().getNeighborhood());
+        Assertions.assertThat(customerOutput.getAddress().getCity()).isEqualTo(input.getAddress().getCity());
+        Assertions.assertThat(customerOutput.getAddress().getState()).isEqualTo(input.getAddress().getState());
+        Assertions.assertThat(customerOutput.getAddress().getZipCode()).isEqualTo(input.getAddress().getZipCode());
     }
 }
