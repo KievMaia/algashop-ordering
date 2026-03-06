@@ -2,8 +2,9 @@ package com.algaworks.algashop.ordering.application.customer.management;
 
 import com.algaworks.algashop.ordering.application.commons.AddressData;
 import com.algaworks.algashop.ordering.domain.model.commons.Email;
-import com.algaworks.algashop.ordering.domain.model.customer.*;
-import com.algaworks.algashop.ordering.domain.model.shoppingcart.ShoppingCartDoesNotContainItemException;
+import com.algaworks.algashop.ordering.domain.model.customer.CustomerArchivedException;
+import com.algaworks.algashop.ordering.domain.model.customer.CustomerEmailIsInUseException;
+import com.algaworks.algashop.ordering.domain.model.customer.CustomerNotFoundException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +22,6 @@ class CustomerManagementApplicationServiceIT {
 
     @Autowired
     private CustomerManagementApplicationService customerManagementApplicationService;
-
-    @Autowired
-    private CustomerRegistrationService customerRegistrationService;
 
     @Test
     public void shouldRegister() {
