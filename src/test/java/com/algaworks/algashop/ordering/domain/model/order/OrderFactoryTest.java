@@ -1,8 +1,5 @@
-package com.algaworks.algashop.ordering.domain.model.factory;
+package com.algaworks.algashop.ordering.domain.model.order;
 
-import com.algaworks.algashop.ordering.domain.model.order.OrderTestDataBuilder;
-import com.algaworks.algashop.ordering.domain.model.order.OrderFactory;
-import com.algaworks.algashop.ordering.domain.model.order.PaymentMethodEnum;
 import com.algaworks.algashop.ordering.domain.model.product.ProductTestDataBuilder;
 import com.algaworks.algashop.ordering.domain.model.commons.Quantity;
 import com.algaworks.algashop.ordering.domain.model.customer.CustomerId;

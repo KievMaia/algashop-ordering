@@ -1,11 +1,8 @@
-package com.algaworks.algashop.ordering.domain.model.service;
+package com.algaworks.algashop.ordering.domain.model.customer;
 
-import com.algaworks.algashop.ordering.domain.model.customer.CustomerLoyaltyPointService;
 import com.algaworks.algashop.ordering.domain.model.order.OrderStatusEnum;
-import com.algaworks.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
 import com.algaworks.algashop.ordering.domain.model.order.OrderTestDataBuilder;
 import com.algaworks.algashop.ordering.domain.model.product.ProductTestDataBuilder;
-import com.algaworks.algashop.ordering.domain.model.customer.LoyaltyPoints;
 import com.algaworks.algashop.ordering.domain.model.commons.Quantity;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;

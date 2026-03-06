@@ -18,8 +18,8 @@ class ShippingCostServiceIT {
 
     @Test
     void shouldCalculate() {
-        ZipCode origin = originAddressService.originAddress().zipCode();
-        ZipCode destination = new ZipCode("12345");
+        var origin = originAddressService.originAddress().zipCode();
+        var destination = new ZipCode("12345");
 
         var calculate = shippingCostService
                 .calculate(new CalculationRequest(origin, destination));
