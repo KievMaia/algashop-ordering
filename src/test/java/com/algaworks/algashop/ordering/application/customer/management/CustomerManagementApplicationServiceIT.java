@@ -119,4 +119,27 @@ class CustomerManagementApplicationServiceIT {
 
         Assertions.assertThat(customerOutput.getRegisteredAt()).isNotNull();
     }
+
+    @Test
+    public void shouldArchive() {
+        var customerInput = aCustomer().build();
+        var customerId = customerManagementApplicationService.create(customerInput);
+
+        customerManagementApplicationService.archive(customerId);
+
+        var customerOutput = customerManagementApplicationService.findById(customerId);
+
+        Assertions.assertThat(customerOutput.getArchived()).isTrue();
+        Assertions.assertThat(customerOutput.getArchivedAt()).isNotNull();
+
+        Assertions.assertThat(customerOutput.getFirstName()).isEqualTo("Anonymous");
+        Assertions.assertThat(customerOutput.getLastName()).isEqualTo("Anonymous");
+        Assertions.assertThat(customerOutput.getPhone()).isEqualTo("000-000-0000");
+        Assertions.assertThat(customerOutput.getDocument()).isEqualTo("000-00-0000");
+        Assertions.assertThat(customerOutput.getEmail()).contains("@anonymous.com");
+        Assertions.assertThat(customerOutput.getBirthDate()).isNull();
+        Assertions.assertThat(customerOutput.getPromotionNotificationsAllowed()).isFalse();
+        Assertions.assertThat(customerOutput.getAddress().getNumber()).isEqualTo("Anonymized");
+        Assertions.assertThat(customerOutput.getAddress().getComplement()).isNull();
+    }
 }
