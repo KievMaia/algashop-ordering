@@ -98,4 +98,16 @@ public class CustomerManagementApplicationService {
 
         customers.add(customer);
     }
+
+    @Transactional
+    public void changeEmail(final UUID customerId, final Email email) {
+        Objects.requireNonNull(customerId);
+        Objects.requireNonNull(email);
+
+        var customer =
+                customers.ofId(new CustomerId(customerId)).orElseThrow(CustomerNotFoundException::new);
+
+        customerRegistration.changeEmail(customer, email);
+        customers.add(customer);
+    }
 }

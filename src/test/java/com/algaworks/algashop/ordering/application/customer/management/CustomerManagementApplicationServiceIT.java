@@ -1,11 +1,16 @@
 package com.algaworks.algashop.ordering.application.customer.management;
 
 import com.algaworks.algashop.ordering.application.commons.AddressData;
+import com.algaworks.algashop.ordering.domain.model.commons.Email;
+import com.algaworks.algashop.ordering.domain.model.customer.*;
+import com.algaworks.algashop.ordering.domain.model.shoppingcart.ShoppingCartDoesNotContainItemException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
 
 import static com.algaworks.algashop.ordering.application.customer.management.CustomerInputTestDateBuilder.aCustomer;
 import static com.algaworks.algashop.ordering.application.customer.management.CustomerUpdateInputTestDataBuilder.aCustomerUpdateInput;
@@ -16,6 +21,9 @@ class CustomerManagementApplicationServiceIT {
 
     @Autowired
     private CustomerManagementApplicationService customerManagementApplicationService;
+
+    @Autowired
+    private CustomerRegistrationService customerRegistrationService;
 
     @Test
     public void shouldRegister() {
@@ -141,5 +149,70 @@ class CustomerManagementApplicationServiceIT {
         Assertions.assertThat(customerOutput.getPromotionNotificationsAllowed()).isFalse();
         Assertions.assertThat(customerOutput.getAddress().getNumber()).isEqualTo("Anonymized");
         Assertions.assertThat(customerOutput.getAddress().getComplement()).isNull();
+    }
+
+    @Test
+    public void shouldChangeEmail() {
+        var customerInput = aCustomer().build();
+        var customerId = customerManagementApplicationService.create(customerInput);
+        var newEmail = "novoemail@email.com";
+
+        customerManagementApplicationService.changeEmail(customerId, new Email(newEmail));
+
+        var customerOutput = customerManagementApplicationService.findById(customerId);
+
+        Assertions.assertThat(customerOutput.getEmail()).isEqualTo(newEmail);
+    }
+
+    @Test
+    public void shouldThrowExceptionChangeEmailInexistent() {
+        var customerId = UUID.randomUUID();
+        var newEmail = "novoemail@email.com";
+
+        Assertions.assertThatThrownBy(
+                        () -> customerManagementApplicationService.changeEmail(customerId,
+                                                                               new Email(newEmail)))
+                .isInstanceOf(CustomerNotFoundException.class);
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenChangeEmailToArchivedCustomer() {
+        var customerInput = aCustomer().build();
+        var customerId = customerManagementApplicationService.create(customerInput);
+        var newEmail = "novoemail@email.com";
+
+        customerManagementApplicationService.archive(customerId);
+
+        Assertions.assertThatThrownBy(
+                        () -> customerManagementApplicationService.changeEmail(customerId,
+                                                                               new Email(newEmail)))
+                .isInstanceOf(CustomerArchivedException.class);
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenChangeInvalidEmail() {
+        var customerInput = aCustomer().build();
+        var customerId = customerManagementApplicationService.create(customerInput);
+        var newEmail = "novoemailemail.com";
+
+        customerManagementApplicationService.archive(customerId);
+
+        Assertions.assertThatThrownBy(
+                        () -> customerManagementApplicationService.changeEmail(customerId,
+                                                                               new Email(newEmail)))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenChangeEmailToExistingCustomerEmail() {
+        var customerInput1 = aCustomer().build();
+        var customerInput2 = aCustomer().email("johndoe2@email.com").build();
+        var customerId1 = customerManagementApplicationService.create(customerInput1);
+        customerManagementApplicationService.create(customerInput2);
+
+        Assertions.assertThatThrownBy(
+                        () -> customerManagementApplicationService.changeEmail(customerId1,
+                                                                               new Email(customerInput2.getEmail())))
+                .isInstanceOf(CustomerEmailIsInUseException.class);
     }
 }
