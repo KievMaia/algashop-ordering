@@ -44,12 +44,6 @@ class CheckoutApplicationServiceIT {
     @Autowired
     private Customers customers;
 
-    @Autowired
-    private CheckoutService checkoutService;
-
-    @Autowired
-    private OriginAddressService originAddressService;
-
     @MockitoBean
     private ShippingCostService shippingCostService;
 
