@@ -1,4 +1,4 @@
-package com.algaworks.algashop.ordering.application.customer.management;
+package com.algaworks.algashop.ordering.application.customer.loyalty;
 
 import com.algaworks.algashop.ordering.domain.model.customer.*;
 import com.algaworks.algashop.ordering.domain.model.order.OrderId;
