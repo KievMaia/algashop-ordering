@@ -3,10 +3,13 @@ package com.algaworks.algashop.ordering.application.order;
 import com.algaworks.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
 import com.algaworks.algashop.ordering.domain.model.customer.Customers;
 import com.algaworks.algashop.ordering.domain.model.order.*;
+import com.algaworks.algashop.ordering.infrastructure.listener.order.OrderEventListener;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
@@ -15,6 +18,9 @@ class OrderManagementApplicationServiceIT {
 
     @Autowired
     private OrderManagementApplicationService orderManagementApplicationService;
+
+    @MockitoSpyBean
+    private OrderEventListener orderEventListener;
 
     @Autowired
     private Orders orders;
@@ -41,6 +47,7 @@ class OrderManagementApplicationServiceIT {
         var canceledOrder = orders.ofId(orderId).orElseThrow();
 
         Assertions.assertThat(canceledOrder.canceledAt()).isNotNull();
+        Mockito.verify(orderEventListener).listen(Mockito.any(OrderCanceledEvent.class));
     }
 
     @Test
@@ -90,6 +97,7 @@ class OrderManagementApplicationServiceIT {
         var canceledOrder = orders.ofId(orderId).orElseThrow();
 
         Assertions.assertThat(canceledOrder.paidAt()).isNotNull();
+        Mockito.verify(orderEventListener).listen(Mockito.any(OrderPaidEvent.class));
     }
 
     @Test
@@ -137,6 +145,7 @@ class OrderManagementApplicationServiceIT {
         var canceledOrder = orders.ofId(orderId).orElseThrow();
 
         Assertions.assertThat(canceledOrder.readyAt()).isNotNull();
+        Mockito.verify(orderEventListener).listen(Mockito.any(OrderReadyEvent.class));
     }
 
     @Test
