@@ -101,4 +101,16 @@ class CustomerTest {
 
         Assertions.assertThat(customer.domainEvents()).contains(event);
     }
+
+    @Test
+    void givenUnarchivedCustomer_whenArchive_shouldGenerateCustomerArchivedEvent() {
+        var customer = CustomerTestDataBuilder.existingCustomer().archived(false).archivedAt(null).build();
+
+        customer.archived();
+
+        var event =
+                new CustomerArchivedEvent(customer.id(), customer.archivedAt());
+
+        Assertions.assertThat(customer.domainEvents()).contains(event);
+    }
 }
