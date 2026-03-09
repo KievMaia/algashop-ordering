@@ -36,28 +36,44 @@ public class Customer extends AbstractEventSourceEntity implements AggregateRoot
                                            Phone phone, Document document, Boolean promotionNotificationsAllowed,
                                            Address address) {
         var customer = new Customer(new CustomerId(),
-                                               null,
-                                               fullName,
-                                               birthDate,
-                                               email,
-                                               phone,
-                                               document,
-                                               promotionNotificationsAllowed,
-                                               false,
-                                               OffsetDateTime.now(),
-                                               null,
-                                               LoyaltyPoints.ZERO,
-                                               address);
+                                    null,
+                                    fullName,
+                                    birthDate,
+                                    email,
+                                    phone,
+                                    document,
+                                    promotionNotificationsAllowed,
+                                    false,
+                                    OffsetDateTime.now(),
+                                    null,
+                                    LoyaltyPoints.ZERO,
+                                    address);
 
-        customer.publishDomainEvent(new CustomerRegisteredEvent(customer.id(), customer.registeredAt()));
+        customer.publishDomainEvent(
+                new CustomerRegisteredEvent(
+                        customer.id(),
+                        customer.registeredAt(),
+                        customer.fullName(),
+                        customer.email())
+        );
 
         return customer;
     }
 
     @Builder(builderClassName = "ExistingCustomerBuild", builderMethodName = "existing")
-    private Customer(CustomerId id, Long version, FullName fullName, BirthDate birthDate, Email email, Phone phone,
-                     Document document, Boolean promotionNotificationsAllowed, Boolean archived,
-                     OffsetDateTime registeredAt, OffsetDateTime archivedAt, LoyaltyPoints loyaltyPoints, Address address) {
+    private Customer(CustomerId id,
+                     Long version,
+                     FullName fullName,
+                     BirthDate birthDate,
+                     Email email,
+                     Phone phone,
+                     Document document,
+                     Boolean promotionNotificationsAllowed,
+                     Boolean archived,
+                     OffsetDateTime registeredAt,
+                     OffsetDateTime archivedAt,
+                     LoyaltyPoints loyaltyPoints,
+                     Address address) {
         this.setId(id);
         this.setVersion(version);
         this.setFullName(fullName);
@@ -92,8 +108,8 @@ public class Customer extends AbstractEventSourceEntity implements AggregateRoot
         this.setBirthDate(null);
         this.setPromotionNotificationsAllowed(false);
         this.setAddress(this.address().toBuilder()
-                .number("Anonymized")
-                .complement(null).build());
+                                .number("Anonymized")
+                                .complement(null).build());
 
         this.publishDomainEvent(new CustomerArchivedEvent(this.id(), this.archivedAt()));
     }
@@ -254,7 +270,9 @@ public class Customer extends AbstractEventSourceEntity implements AggregateRoot
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Customer customer = (Customer) o;
         return Objects.equals(id, customer.id);
     }

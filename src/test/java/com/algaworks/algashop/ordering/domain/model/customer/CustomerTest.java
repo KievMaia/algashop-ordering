@@ -97,7 +97,7 @@ class CustomerTest {
         var customer = CustomerTestDataBuilder.brandNewCustomer().build();
 
         var event =
-                new CustomerRegisteredEvent(customer.id(), customer.registeredAt());
+                new CustomerRegisteredEvent(customer.id(), customer.registeredAt(), customer.fullName(), customer.email());
 
         Assertions.assertThat(customer.domainEvents()).contains(event);
     }
