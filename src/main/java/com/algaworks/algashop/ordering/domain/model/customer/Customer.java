@@ -1,5 +1,6 @@
 package com.algaworks.algashop.ordering.domain.model.customer;
 
+import com.algaworks.algashop.ordering.domain.model.AbstractEventSourceEntity;
 import com.algaworks.algashop.ordering.domain.model.AggregateRoot;
 import com.algaworks.algashop.ordering.domain.model.commons.Address;
 import com.algaworks.algashop.ordering.domain.model.commons.Document;
@@ -14,7 +15,7 @@ import java.util.UUID;
 
 import static com.algaworks.algashop.ordering.domain.model.ErrorMessages.*;
 
-public class Customer implements AggregateRoot<CustomerId> {
+public class Customer extends AbstractEventSourceEntity implements AggregateRoot<CustomerId> {
     private CustomerId id;
     private FullName fullName;
     private BirthDate birthDate;
@@ -34,19 +35,23 @@ public class Customer implements AggregateRoot<CustomerId> {
     private static Customer createBrandNew(FullName fullName, BirthDate birthDate, Email email,
                                            Phone phone, Document document, Boolean promotionNotificationsAllowed,
                                            Address address) {
-        return new Customer(new CustomerId(),
-                null,
-                fullName,
-                birthDate,
-                email,
-                phone,
-                document,
-                promotionNotificationsAllowed,
-                false,
-                OffsetDateTime.now(),
-                null,
-                LoyaltyPoints.ZERO,
-                address);
+        var customer = new Customer(new CustomerId(),
+                                               null,
+                                               fullName,
+                                               birthDate,
+                                               email,
+                                               phone,
+                                               document,
+                                               promotionNotificationsAllowed,
+                                               false,
+                                               OffsetDateTime.now(),
+                                               null,
+                                               LoyaltyPoints.ZERO,
+                                               address);
+
+        customer.publishDomainEvent(new CustomerRegisteredEvent(customer.id(), customer.registeredAt()));
+
+        return customer;
     }
 
     @Builder(builderClassName = "ExistingCustomerBuild", builderMethodName = "existing")

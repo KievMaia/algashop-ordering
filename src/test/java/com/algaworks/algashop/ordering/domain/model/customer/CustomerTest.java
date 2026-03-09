@@ -91,4 +91,14 @@ class CustomerTest {
         assertThatExceptionOfType(IllegalArgumentException.class)
                 .isThrownBy(() -> customer.addLoyaltyPoints(new LoyaltyPoints(-10)));
     }
+
+    @Test
+    void givenValidData_whenCreateBrandNewCustomerShouldGenerateRegisteredEvent() {
+        var customer = CustomerTestDataBuilder.brandNewCustomer().build();
+
+        var event =
+                new CustomerRegisteredEvent(customer.id(), customer.registeredAt());
+
+        Assertions.assertThat(customer.domainEvents()).contains(event);
+    }
 }

@@ -1,6 +1,7 @@
 package com.algaworks.algashop.ordering.domain.model.order;
 
 
+import com.algaworks.algashop.ordering.domain.model.AbstractEventSourceEntity;
 import com.algaworks.algashop.ordering.domain.model.AggregateRoot;
 import com.algaworks.algashop.ordering.domain.model.commons.Money;
 import com.algaworks.algashop.ordering.domain.model.product.Product;
@@ -18,7 +19,7 @@ import java.util.Set;
 
 import static com.algaworks.algashop.ordering.domain.model.order.OrderStatusEnum.DRAFT;
 
-public class Order implements AggregateRoot<OrderId> {
+public class Order extends AbstractEventSourceEntity implements AggregateRoot<OrderId> {
 
     private OrderId id;
     private CustomerId customerId;
