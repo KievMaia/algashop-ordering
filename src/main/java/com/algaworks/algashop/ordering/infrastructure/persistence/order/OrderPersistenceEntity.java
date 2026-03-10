@@ -152,6 +152,10 @@ public class OrderPersistenceEntity extends AbstractAggregateRoot<OrderPersisten
         return this.customer.getId();
     }
 
+    public Collection<Object> getEvents() {
+        return super.domainEvents();
+    }
+
     public void addEvents(Collection<Object> events) {
         if (events != null) {
             for (Object event : events) {

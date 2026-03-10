@@ -21,7 +21,7 @@ public class CustomerEventListener {
 
     @EventListener
     public void listen(CustomerRegisteredEvent event) {
-        log.info("CustomerRegisteredEvent listen 1");
+        log.info("CustomerRegisteredEvent listen");
         var input = new CustomerNotificationService.NotifyNewRegistrationInput(
                 event.customerId().value(),
                 event.fullName().firstName(),
@@ -32,12 +32,12 @@ public class CustomerEventListener {
 
     @EventListener
     public void listen(CustomerArchivedEvent event) {
-        log.info("CustomerArchivedEvent listen 1");
+        log.info("CustomerArchivedEvent listen");
     }
 
     @EventListener
     public void listen(OrderReadyEvent event) {
         customerLoyaltyPointsApplicationService.addLoyaltyPoints(event.customerId().value(), event.orderId().toString());
-        log.info("CustomerArchivedEvent listen 1");
+        log.info("OrderReadyEvent listen");
     }
 }
