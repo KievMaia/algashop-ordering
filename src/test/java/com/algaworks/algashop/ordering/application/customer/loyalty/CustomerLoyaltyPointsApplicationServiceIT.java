@@ -1,6 +1,7 @@
 package com.algaworks.algashop.ordering.application.customer.loyalty;
 
 import com.algaworks.algashop.ordering.application.customer.management.CustomerManagementApplicationService;
+import com.algaworks.algashop.ordering.domain.model.commons.Money;
 import com.algaworks.algashop.ordering.domain.model.commons.Quantity;
 import com.algaworks.algashop.ordering.domain.model.customer.*;
 import com.algaworks.algashop.ordering.domain.model.order.*;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.UUID;
 
 import static com.algaworks.algashop.ordering.application.customer.management.CustomerInputTestDateBuilder.aCustomer;
+import static com.algaworks.algashop.ordering.domain.model.order.OrderStatusEnum.DRAFT;
 import static com.algaworks.algashop.ordering.domain.model.order.OrderStatusEnum.READY;
 
 @SpringBootTest
@@ -28,27 +30,33 @@ class CustomerLoyaltyPointsApplicationServiceIT {
     private CustomerManagementApplicationService customerManagementApplicationService;
 
     @Autowired
+    private Customers customers;
+
+    @Autowired
     private Orders orders;
 
     @Test
-    public void shouldAddPointsSuccessfully() {
-        var customer = aCustomer().build();
+    void shouldAddLoyaltyPointsToCustomerWhenOrderIsValidAndReady() {
+        var customer = CustomerTestDataBuilder.brandNewCustomer().build();
+        customers.add(customer);
 
-        var customerId = customerManagementApplicationService.create(customer);
+        var order = OrderTestDataBuilder.anOrder()
+                .customerId(customer.id())
+                .orderStatusEnum(DRAFT)
+                .withItems(false)
+                .build();
+        var product = ProductTestDataBuilder.aProduct().price(new Money("2500")).build();
 
-        var ordered =
-                OrderTestDataBuilder.anOrder()
-                        .customerId(new CustomerId(customerId))
-                        .orderStatusEnum(READY)
-                        .build();
+        order.addItem(product, new Quantity(1));
+        order.place();
+        order.markAsPaid();
+        order.markAsReady();
 
-        orders.add(ordered);
+        orders.add(order);
 
-        customerLoyaltyPointsApplicationService.addLoyaltyPoints(customerId, ordered.id().value());
-
-        var customerOutput = customerManagementApplicationService.findById(customerId);
-
-        Assertions.assertThat(customerOutput.getLoyaltyPoints()).isEqualTo(30);
+        Customer updatedCustomer = customers.ofId(customer.id()).orElseThrow();
+        Assertions.assertThat(updatedCustomer).isNotNull();
+        Assertions.assertThat(updatedCustomer.loyaltyPoints()).isEqualTo(new LoyaltyPoints(10));
     }
 
     @Test
@@ -67,7 +75,7 @@ class CustomerLoyaltyPointsApplicationServiceIT {
         Assertions.assertThatThrownBy(
                         () -> customerLoyaltyPointsApplicationService.addLoyaltyPoints(
                                 UUID.randomUUID(),
-                                ordered.id().value()))
+                                ordered.id().toString()))
                 .isInstanceOf(CustomerNotFoundException.class);
     }
 
@@ -80,7 +88,7 @@ class CustomerLoyaltyPointsApplicationServiceIT {
         Assertions.assertThatThrownBy(
                         () -> customerLoyaltyPointsApplicationService.addLoyaltyPoints(
                                 customerId,
-                                TSID.fast()))
+                                TSID.fast().toString()))
                 .isInstanceOf(OrderNotFoundException.class);
     }
 
@@ -98,12 +106,8 @@ class CustomerLoyaltyPointsApplicationServiceIT {
                         .orderStatusEnum(READY)
                         .build();
 
-        orders.add(ordered);
-
         Assertions.assertThatThrownBy(
-                        () -> customerLoyaltyPointsApplicationService.addLoyaltyPoints(
-                                customerId,
-                                ordered.id().value()))
+                        () -> orders.add(ordered))
                 .isInstanceOf(CustomerArchivedException.class);
     }
 
@@ -126,7 +130,7 @@ class CustomerLoyaltyPointsApplicationServiceIT {
         Assertions.assertThatThrownBy(
                         () -> customerLoyaltyPointsApplicationService.addLoyaltyPoints(
                                 customerId1,
-                                ordered.id().value()))
+                                ordered.id().toString()))
                 .isInstanceOf(OrderNotBelongsToCustomerException.class);
     }
 
@@ -147,7 +151,7 @@ class CustomerLoyaltyPointsApplicationServiceIT {
         Assertions.assertThatThrownBy(
                         () -> customerLoyaltyPointsApplicationService.addLoyaltyPoints(
                                 customerId,
-                                ordered.id().value()))
+                                ordered.id().toString()))
                 .isInstanceOf(CantAddLoyaltyPointsOrderIsNotReady.class);
     }
 
@@ -159,7 +163,8 @@ class CustomerLoyaltyPointsApplicationServiceIT {
 
         var product = ProductTestDataBuilder.aProductAltRamMemory().build();
 
-        var order = OrderTestDataBuilder.anOrder().customerId(new CustomerId(customerId)).withItems(false).orderStatusEnum(OrderStatusEnum.DRAFT).build();
+        var order = OrderTestDataBuilder.anOrder().customerId(new CustomerId(customerId)).withItems(false).orderStatusEnum(
+                DRAFT).build();
         order.addItem(product, new Quantity(1));
         order.place();
         order.markAsPaid();
@@ -167,7 +172,7 @@ class CustomerLoyaltyPointsApplicationServiceIT {
 
         orders.add(order);
 
-        customerLoyaltyPointsApplicationService.addLoyaltyPoints(customerId, order.id().value());
+        customerLoyaltyPointsApplicationService.addLoyaltyPoints(customerId, order.id().toString());
 
         var customerOutput = customerManagementApplicationService.findById(customerId);
 
