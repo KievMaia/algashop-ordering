@@ -2,6 +2,9 @@ package com.algaworks.algashop.ordering.application.checkout;
 
 import com.algaworks.algashop.ordering.application.shoppingcart.ShoppingCartNotFoundException;
 import com.algaworks.algashop.ordering.domain.model.commons.ZipCode;
+import com.algaworks.algashop.ordering.domain.model.customer.Customer;
+import com.algaworks.algashop.ordering.domain.model.customer.CustomerNotFoundException;
+import com.algaworks.algashop.ordering.domain.model.customer.Customers;
 import com.algaworks.algashop.ordering.domain.model.order.*;
 import com.algaworks.algashop.ordering.domain.model.order.shipping.OriginAddressService;
 import com.algaworks.algashop.ordering.domain.model.order.shipping.ShippingCostService;
@@ -18,6 +21,7 @@ public class CheckoutApplicationService {
 
     private final ShoppingCarts shoppingCarts;
     private final Orders orders;
+    private final Customers customers;
 
     private final ShippingCostService shippingCostService;
     private final OriginAddressService originAddressService;
@@ -34,16 +38,21 @@ public class CheckoutApplicationService {
         var shoppingCart = shoppingCarts.ofId(new ShoppingCartId(input.getShoppingCartId()))
                 .orElseThrow(ShoppingCartNotFoundException::new);
 
+        var customer = customers.ofId(shoppingCart.customerId()).orElseThrow(CustomerNotFoundException::new);
+
         var shippingCalculationResult = this.shippingCalculate(input);
 
         var billing = billingInputDisassembler.toDomainModel(input.getBilling());
         var shipping = shippingInputDisassembler.toDomainModel(input.getShipping(),
                                                                shippingCalculationResult);
 
-        var order = checkoutService.checkout(shoppingCart,
-                                             billing,
-                                             shipping,
-                                             paymentMethod);
+        var order = checkoutService.checkout(
+                customer,
+                shoppingCart,
+                billing,
+                shipping,
+                paymentMethod
+        );
 
         shoppingCarts.add(shoppingCart);
 
