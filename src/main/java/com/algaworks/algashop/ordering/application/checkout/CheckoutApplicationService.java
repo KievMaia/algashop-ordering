@@ -2,10 +2,11 @@ package com.algaworks.algashop.ordering.application.checkout;
 
 import com.algaworks.algashop.ordering.application.shoppingcart.ShoppingCartNotFoundException;
 import com.algaworks.algashop.ordering.domain.model.commons.ZipCode;
-import com.algaworks.algashop.ordering.domain.model.customer.Customer;
 import com.algaworks.algashop.ordering.domain.model.customer.CustomerNotFoundException;
 import com.algaworks.algashop.ordering.domain.model.customer.Customers;
-import com.algaworks.algashop.ordering.domain.model.order.*;
+import com.algaworks.algashop.ordering.domain.model.order.CheckoutService;
+import com.algaworks.algashop.ordering.domain.model.order.Orders;
+import com.algaworks.algashop.ordering.domain.model.order.PaymentMethodEnum;
 import com.algaworks.algashop.ordering.domain.model.order.shipping.OriginAddressService;
 import com.algaworks.algashop.ordering.domain.model.order.shipping.ShippingCostService;
 import com.algaworks.algashop.ordering.domain.model.shoppingcart.ShoppingCartId;
