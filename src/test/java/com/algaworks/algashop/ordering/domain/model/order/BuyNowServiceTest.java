@@ -8,6 +8,7 @@ import com.algaworks.algashop.ordering.domain.model.commons.Money;
 import com.algaworks.algashop.ordering.domain.model.commons.Quantity;
 import com.algaworks.algashop.ordering.domain.model.customer.CustomerId;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,11 +24,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(MockitoExtension.class)
 class BuyNowServiceTest {
 
-    @InjectMocks
     private BuyNowService buyNowService;
 
     @Mock
     private Orders orders;
+
+    @BeforeEach
+    void setUp() {
+        var specification =
+                new CustomerHaveFreeShippingSpecification(orders, 100, 2, 2000);
+        buyNowService = new BuyNowService(specification);
+    }
 
     @Test
     public void buyNowValidProduct() {
