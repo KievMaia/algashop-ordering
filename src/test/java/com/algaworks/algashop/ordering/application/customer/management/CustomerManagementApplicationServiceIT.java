@@ -1,9 +1,11 @@
 package com.algaworks.algashop.ordering.application.customer.management;
 
 import com.algaworks.algashop.ordering.application.commons.AddressData;
+import com.algaworks.algashop.ordering.application.customer.query.CustomerOutput;
+import com.algaworks.algashop.ordering.application.customer.query.CustomerQueryService;
 import com.algaworks.algashop.ordering.domain.model.commons.Email;
 import com.algaworks.algashop.ordering.domain.model.customer.*;
-import com.algaworks.algashop.ordering.domain.model.customer.notification.CustomerNotificationService;
+import com.algaworks.algashop.ordering.application.customer.notification.CustomerNotificationService;
 import com.algaworks.algashop.ordering.infrastructure.listener.customer.CustomerEventListener;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -31,6 +33,9 @@ class CustomerManagementApplicationServiceIT {
     @MockitoSpyBean
     private CustomerNotificationService  customerNotificationService;
 
+    @Autowired
+    private CustomerQueryService customerQueryService;
+
     @Test
     public void shouldRegister() {
         var input = aCustomer().build();
@@ -39,7 +44,7 @@ class CustomerManagementApplicationServiceIT {
 
         Assertions.assertThat(customerId).isNotNull();
 
-        var customerOutput = customerManagementApplicationService.findById(customerId);
+        var customerOutput = customerQueryService.findById(customerId);
 
         Assertions.assertThat(customerOutput)
                 .extracting(
@@ -99,7 +104,7 @@ class CustomerManagementApplicationServiceIT {
 
         customerManagementApplicationService.update(customerId, customerUpdateInput);
 
-        var customerOutput = customerManagementApplicationService.findById(customerId);
+        var customerOutput = customerQueryService.findById(customerId);
 
         Assertions.assertThat(customerOutput)
                 .extracting(
@@ -145,7 +150,7 @@ class CustomerManagementApplicationServiceIT {
 
         customerManagementApplicationService.archive(customerId);
 
-        var customerOutput = customerManagementApplicationService.findById(customerId);
+        var customerOutput = customerQueryService.findById(customerId);
 
         Assertions.assertThat(customerOutput.getArchived()).isTrue();
         Assertions.assertThat(customerOutput.getArchivedAt()).isNotNull();
@@ -169,7 +174,7 @@ class CustomerManagementApplicationServiceIT {
 
         customerManagementApplicationService.changeEmail(customerId, new Email(newEmail));
 
-        var customerOutput = customerManagementApplicationService.findById(customerId);
+        var customerOutput = customerQueryService.findById(customerId);
 
         Assertions.assertThat(customerOutput.getEmail()).isEqualTo(newEmail);
     }

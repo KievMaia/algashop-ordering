@@ -3,7 +3,7 @@ package com.algaworks.algashop.ordering.infrastructure.listener.customer;
 import com.algaworks.algashop.ordering.application.customer.loyalty.CustomerLoyaltyPointsApplicationService;
 import com.algaworks.algashop.ordering.domain.model.customer.CustomerArchivedEvent;
 import com.algaworks.algashop.ordering.domain.model.customer.CustomerRegisteredEvent;
-import com.algaworks.algashop.ordering.domain.model.customer.notification.CustomerNotificationService;
+import com.algaworks.algashop.ordering.application.customer.notification.CustomerNotificationService;
 import com.algaworks.algashop.ordering.domain.model.order.OrderReadyEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

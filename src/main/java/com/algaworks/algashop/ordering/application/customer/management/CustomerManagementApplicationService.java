@@ -1,8 +1,16 @@
 package com.algaworks.algashop.ordering.application.customer.management;
 
-import com.algaworks.algashop.ordering.application.utility.Mapper;
-import com.algaworks.algashop.ordering.domain.model.commons.*;
-import com.algaworks.algashop.ordering.domain.model.customer.*;
+import com.algaworks.algashop.ordering.domain.model.commons.Address;
+import com.algaworks.algashop.ordering.domain.model.commons.Document;
+import com.algaworks.algashop.ordering.domain.model.commons.Email;
+import com.algaworks.algashop.ordering.domain.model.commons.FullName;
+import com.algaworks.algashop.ordering.domain.model.commons.Phone;
+import com.algaworks.algashop.ordering.domain.model.commons.ZipCode;
+import com.algaworks.algashop.ordering.domain.model.customer.BirthDate;
+import com.algaworks.algashop.ordering.domain.model.customer.CustomerId;
+import com.algaworks.algashop.ordering.domain.model.customer.CustomerNotFoundException;
+import com.algaworks.algashop.ordering.domain.model.customer.CustomerRegistrationService;
+import com.algaworks.algashop.ordering.domain.model.customer.Customers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,8 +24,6 @@ public class CustomerManagementApplicationService {
 
     private final CustomerRegistrationService customerRegistration;
     private final Customers customers;
-
-    private final Mapper mapper;
 
     @Transactional
     public UUID create(CustomerInput input) {
@@ -44,16 +50,6 @@ public class CustomerManagementApplicationService {
         );
         customers.add(customer);
         return customer.id().value();
-    }
-
-    @Transactional(readOnly = true)
-    public CustomerOutput findById(UUID customerId) {
-        Objects.requireNonNull(customerId);
-        var customer = customers.ofId(
-                new CustomerId(customerId)
-        ).orElseThrow(CustomerNotFoundException::new);
-
-        return mapper.convert(customer, CustomerOutput.class);
     }
 
     @Transactional

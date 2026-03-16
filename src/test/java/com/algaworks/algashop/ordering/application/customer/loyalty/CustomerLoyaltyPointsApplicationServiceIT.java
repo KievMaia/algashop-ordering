@@ -1,6 +1,7 @@
 package com.algaworks.algashop.ordering.application.customer.loyalty;
 
 import com.algaworks.algashop.ordering.application.customer.management.CustomerManagementApplicationService;
+import com.algaworks.algashop.ordering.application.customer.query.CustomerQueryService;
 import com.algaworks.algashop.ordering.domain.model.commons.Money;
 import com.algaworks.algashop.ordering.domain.model.commons.Quantity;
 import com.algaworks.algashop.ordering.domain.model.customer.*;
@@ -28,6 +29,9 @@ class CustomerLoyaltyPointsApplicationServiceIT {
 
     @Autowired
     private CustomerManagementApplicationService customerManagementApplicationService;
+
+    @Autowired
+    private CustomerQueryService customerQueryService;
 
     @Autowired
     private Customers customers;
@@ -174,7 +178,7 @@ class CustomerLoyaltyPointsApplicationServiceIT {
 
         customerLoyaltyPointsApplicationService.addLoyaltyPoints(customerId, order.id().toString());
 
-        var customerOutput = customerManagementApplicationService.findById(customerId);
+        var customerOutput = customerQueryService.findById(customerId);
 
         Assertions.assertThat(customerOutput.getLoyaltyPoints()).isEqualTo(LoyaltyPoints.ZERO.value());
     }
