@@ -32,7 +32,7 @@ public class CustomerEventListener {
 
     @EventListener
     public void listen(CustomerArchivedEvent event) {
-        log.info("CustomerArchivedEvent listen");
+        log.info("CustomerArchivedEvent listen {}", event.customerId().value());
     }
 
     @EventListener
