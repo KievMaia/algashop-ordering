@@ -1,6 +1,7 @@
 package com.algaworks.algashop.ordering.application.order;
 
 import com.algaworks.algashop.ordering.application.customer.loyalty.CustomerLoyaltyPointsApplicationService;
+import com.algaworks.algashop.ordering.application.order.management.OrderManagementApplicationService;
 import com.algaworks.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
 import com.algaworks.algashop.ordering.domain.model.customer.Customers;
 import com.algaworks.algashop.ordering.domain.model.order.*;

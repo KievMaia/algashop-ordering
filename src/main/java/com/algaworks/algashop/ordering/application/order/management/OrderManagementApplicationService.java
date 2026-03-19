@@ -1,4 +1,4 @@
-package com.algaworks.algashop.ordering.application.order;
+package com.algaworks.algashop.ordering.application.order.management;
 
 import com.algaworks.algashop.ordering.domain.model.order.OrderId;
 import com.algaworks.algashop.ordering.domain.model.order.OrderNotFoundException;
