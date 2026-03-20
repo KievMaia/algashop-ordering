@@ -1,6 +1,5 @@
 package com.algaworks.algashop.ordering.infrastructure.persistence.customer;
 
-import com.algaworks.algashop.ordering.application.customer.query.CustomerFilter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
