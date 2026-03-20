@@ -4,6 +4,7 @@ import com.algaworks.algashop.ordering.application.customer.query.CustomerOutput
 import com.algaworks.algashop.ordering.application.customer.query.CustomerSummaryOutput;
 import com.algaworks.algashop.ordering.application.order.query.OrderDetailOutput;
 import com.algaworks.algashop.ordering.application.order.query.OrderItemDetailOutput;
+import com.algaworks.algashop.ordering.application.shoppingcart.query.ShoppingCartOutput;
 import com.algaworks.algashop.ordering.application.utility.Mapper;
 import com.algaworks.algashop.ordering.domain.model.commons.FullName;
 import com.algaworks.algashop.ordering.domain.model.customer.BirthDate;
@@ -11,6 +12,7 @@ import com.algaworks.algashop.ordering.domain.model.customer.Customer;
 import com.algaworks.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceEntity;
 import com.algaworks.algashop.ordering.infrastructure.persistence.order.OrderItemPersistenceEntity;
 import com.algaworks.algashop.ordering.infrastructure.persistence.order.OrderPersistenceEntity;
+import com.algaworks.algashop.ordering.infrastructure.persistence.shoppingcart.ShoppingCartPersistenceEntity;
 import io.hypersistence.tsid.TSID;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
@@ -99,5 +101,8 @@ public class ModelMapperConfig {
                 .addMappings(mapping ->
                         mapping.using(longToStringTSIDConverter)
                                 .map(OrderItemPersistenceEntity::getOrderId, OrderItemDetailOutput::setOrderId));
+
+        //ShoppingCart
+        modelMapper.createTypeMap(ShoppingCartPersistenceEntity.class, ShoppingCartOutput.class);
     }
 }

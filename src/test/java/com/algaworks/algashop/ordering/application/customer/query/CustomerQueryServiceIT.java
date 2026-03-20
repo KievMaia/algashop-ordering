@@ -23,6 +23,24 @@ class CustomerQueryServiceIT {
     private Customers customers;
 
     @Test
+    public void shouldFindById() {
+        var customer = CustomerTestDataBuilder.existingCustomer().build();
+        customers.add(customer);
+
+        var customerId = customer.id();
+
+        var output = customerQueryService.findById(customerId.value());
+
+        Assertions.assertThat(output).extracting(
+                CustomerOutput::getId,
+                CustomerOutput::getFirstName
+        ).containsExactly(
+                customer.id().value(),
+                customer.fullName().firstName()
+        );
+    }
+
+    @Test
     public void shouldFindByPage() {
         var customer = CustomerTestDataBuilder.existingCustomer().build();
         var customer1 = CustomerTestDataBuilder.existingCustomer().id(new CustomerId()).build();
