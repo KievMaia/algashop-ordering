@@ -9,6 +9,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.algaworks.algashop.ordering.domain.model.order.OrderStatusEnum.*;
@@ -94,5 +95,90 @@ class OrderQueryServiceIT {
         Assertions.assertThat(page.getTotalPages()).isEqualTo(1);
         Assertions.assertThat(page.getTotalElements()).isEqualTo(2);
         Assertions.assertThat(page.getNumberOfElements()).isEqualTo(2);
+    }
+
+    @Test
+    public void shouldFilterByMultipleParams() {
+        var customer1 = CustomerTestDataBuilder.existingCustomer().build();
+        customers.add(customer1);
+        var order = OrderTestDataBuilder.anOrder().orderStatusEnum(DRAFT).withItems(false).customerId(customer1.id()).build();
+        var order2 = OrderTestDataBuilder.anOrder().orderStatusEnum(PLACED).withItems(false).customerId(customer1.id()).build();
+        orders.add(order);
+        orders.add(order2);
+
+        var customer2 = CustomerTestDataBuilder.existingCustomer().id(new CustomerId()).build();
+        customers.add(customer2);
+        var order3 = OrderTestDataBuilder.anOrder().orderStatusEnum(PAID).withItems(false).customerId(customer2.id()).build();
+        var order4 = OrderTestDataBuilder.anOrder().orderStatusEnum(READY).withItems(false).customerId(customer2.id()).build();
+        var order5 = OrderTestDataBuilder.anOrder().orderStatusEnum(CANCELED).withItems(false).customerId(customer2.id()).build();
+        orders.add(order3);
+        orders.add(order4);
+        orders.add(order5);
+
+        var filter = new OrderFilter();
+        filter.setCustomerId(customer1.id().value());
+        filter.setStatus(PLACED.toString().toLowerCase());
+        filter.setTotalAmountFrom(order.totalAmount().value());
+
+        var page = orderQueryService.filter(filter);
+
+        Assertions.assertThat(page.getTotalPages()).isEqualTo(1);
+        Assertions.assertThat(page.getTotalElements()).isEqualTo(1);
+        Assertions.assertThat(page.getNumberOfElements()).isEqualTo(1);
+    }
+
+    @Test
+    public void givenInvalidOrderID_whenFilter_shouldReturnEmptyPage() {
+        var customer1 = CustomerTestDataBuilder.existingCustomer().build();
+        customers.add(customer1);
+        var order = OrderTestDataBuilder.anOrder().orderStatusEnum(DRAFT).withItems(false).customerId(customer1.id()).build();
+        var order2 = OrderTestDataBuilder.anOrder().orderStatusEnum(PLACED).withItems(false).customerId(customer1.id()).build();
+        orders.add(order);
+        orders.add(order2);
+
+        var customer2 = CustomerTestDataBuilder.existingCustomer().id(new CustomerId()).build();
+        customers.add(customer2);
+        var order3 = OrderTestDataBuilder.anOrder().orderStatusEnum(PAID).withItems(false).customerId(customer2.id()).build();
+        var order4 = OrderTestDataBuilder.anOrder().orderStatusEnum(READY).withItems(false).customerId(customer2.id()).build();
+        var order5 = OrderTestDataBuilder.anOrder().orderStatusEnum(CANCELED).withItems(false).customerId(customer2.id()).build();
+        orders.add(order3);
+        orders.add(order4);
+        orders.add(order5);
+
+        var filter = new OrderFilter();
+        filter.setOrderId("ABC");
+
+        var page = orderQueryService.filter(filter);
+
+        Assertions.assertThat(page.getTotalPages()).isEqualTo(0);
+        Assertions.assertThat(page.getTotalElements()).isEqualTo(0);
+        Assertions.assertThat(page.getNumberOfElements()).isEqualTo(0);
+    }
+
+    @Test
+    public void shouldOrderByStatus() {
+        var customer1 = CustomerTestDataBuilder.existingCustomer().build();
+        customers.add(customer1);
+        var order = OrderTestDataBuilder.anOrder().orderStatusEnum(DRAFT).withItems(false).customerId(customer1.id()).build();
+        var order2 = OrderTestDataBuilder.anOrder().orderStatusEnum(PLACED).withItems(false).customerId(customer1.id()).build();
+        orders.add(order);
+        orders.add(order2);
+
+        var customer2 = CustomerTestDataBuilder.existingCustomer().id(new CustomerId()).build();
+        customers.add(customer2);
+        var order3 = OrderTestDataBuilder.anOrder().orderStatusEnum(PAID).withItems(false).customerId(customer2.id()).build();
+        var order4 = OrderTestDataBuilder.anOrder().orderStatusEnum(READY).withItems(false).customerId(customer2.id()).build();
+        var order5 = OrderTestDataBuilder.anOrder().orderStatusEnum(CANCELED).withItems(false).customerId(customer2.id()).build();
+        orders.add(order3);
+        orders.add(order4);
+        orders.add(order5);
+
+        var filter = new OrderFilter();
+        filter.setSortByProperty(OrderFilter.SortType.STATUS);
+        filter.setSortDirection(Sort.Direction.ASC);
+
+        var page = orderQueryService.filter(filter);
+
+        Assertions.assertThat(page.getContent().getFirst().getStatus()).isEqualTo(CANCELED.toString());
     }
 }

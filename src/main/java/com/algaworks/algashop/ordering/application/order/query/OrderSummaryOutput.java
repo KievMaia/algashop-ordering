@@ -25,9 +25,10 @@ public class OrderSummaryOutput {
     private String status;
     private String paymentMethod;
 
-    public OrderSummaryOutput(Long id, CustomerMinimalOutput customerMinimalOutput, Integer totalItems,
+    public OrderSummaryOutput(Long id, Integer totalItems,
                               BigDecimal totalAmount, OffsetDateTime placedAt, OffsetDateTime paidAt,
-                              OffsetDateTime canceledAt, OffsetDateTime readyAt, String status, String paymentMethod) {
+                              OffsetDateTime canceledAt, OffsetDateTime readyAt, String status, String paymentMethod,
+                              CustomerMinimalOutput customerMinimalOutput) {
         this.id = new OrderId(id).toString();
         this.customerMinimalOutput = customerMinimalOutput;
         this.totalItems = totalItems;
