@@ -1,19 +1,13 @@
 package com.algaworks.algashop.ordering.infrastructure.persistence.order;
 
-import com.algaworks.algashop.ordering.application.order.query.CustomerMinimalOutput;
-import com.algaworks.algashop.ordering.application.order.query.OrderDetailOutput;
-import com.algaworks.algashop.ordering.application.order.query.OrderQueryService;
-import com.algaworks.algashop.ordering.application.order.query.OrderSummaryOutput;
+import com.algaworks.algashop.ordering.application.order.query.*;
 import com.algaworks.algashop.ordering.application.utility.Mapper;
 import com.algaworks.algashop.ordering.application.utility.PageFilter;
 import com.algaworks.algashop.ordering.domain.model.order.OrderId;
 import com.algaworks.algashop.ordering.domain.model.order.OrderNotFoundException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Path;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -22,6 +16,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -41,7 +37,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
     }
 
     @Override
-    public Page<OrderSummaryOutput> filter(PageFilter filter) {
+    public Page<OrderSummaryOutput> filter(OrderFilter filter) {
         var totalQueryResults = countTotalQueryResults(filter);
 
         if (totalQueryResults.equals(0L)) {
@@ -52,20 +48,23 @@ public class OrderQueryServiceImpl implements OrderQueryService {
         return filterQuery(filter, totalQueryResults);
     }
 
-    private Long countTotalQueryResults(PageFilter pageFilter) {
+    private Long countTotalQueryResults(OrderFilter filter) {
         var builder = entityManager.getCriteriaBuilder();
         var criteriaQuery = builder.createQuery(Long.class);
         var root = criteriaQuery.from(OrderPersistenceEntity.class);
 
         var count = builder.count(root);
+        final Predicate[] predicates = toPredicates(builder, root, filter);
+
         criteriaQuery.select(count);
+        criteriaQuery.where(predicates);
 
         var query = entityManager.createQuery(criteriaQuery);
 
         return query.getSingleResult();
     }
 
-    private Page<OrderSummaryOutput> filterQuery(PageFilter filter, Long totalQueryResults) {
+    private Page<OrderSummaryOutput> filterQuery(OrderFilter filter, Long totalQueryResults) {
         var builder = entityManager.getCriteriaBuilder();
         var criteriaQuery = builder.createQuery(OrderSummaryOutput.class);
         var root = criteriaQuery.from(OrderPersistenceEntity.class);
@@ -95,6 +94,10 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 
         );
 
+        final Predicate[] predicates = toPredicates(builder, root, filter);
+
+        criteriaQuery.where(predicates);
+
         var typedQuery = entityManager.createQuery(criteriaQuery);
 
         typedQuery.setFirstResult(filter.getPage() * filter.getSize());
@@ -103,5 +106,18 @@ public class OrderQueryServiceImpl implements OrderQueryService {
         var pageRequest = PageRequest.of(filter.getPage(), filter.getSize());
 
         return new PageImpl<>(typedQuery.getResultList(), pageRequest, totalQueryResults);
+    }
+
+    private Predicate[] toPredicates(CriteriaBuilder builder, Root<OrderPersistenceEntity> root, OrderFilter filter) {
+        List<Predicate> predicates = new ArrayList<>();
+
+        if (filter.getCustomerId() != null) {
+            var customerIdPath = root.get("customer").get("id");
+            var expectedCustomerId = filter.getCustomerId();
+            var predicate = builder.equal(customerIdPath, expectedCustomerId);
+            predicates.add(predicate);
+        }
+
+        return predicates.toArray(new Predicate[]{});
     }
 }
