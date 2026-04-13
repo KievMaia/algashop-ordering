@@ -1,6 +1,6 @@
 package com.algaworks.algashop.ordering.infrastructure.persistence.shoppingcart;
 
-import com.algaworks.algashop.ordering.application.shoppingcart.ShoppingCartNotFoundException;
+import com.algaworks.algashop.ordering.domain.model.shoppingcart.ShoppingCartNotFoundException;
 import com.algaworks.algashop.ordering.application.shoppingcart.query.ShoppingCartOutput;
 import com.algaworks.algashop.ordering.application.shoppingcart.query.ShoppingCartQueryService;
 import com.algaworks.algashop.ordering.application.utility.Mapper;

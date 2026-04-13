@@ -1,6 +1,6 @@
 package com.algaworks.algashop.ordering.application.checkout;
 
-import com.algaworks.algashop.ordering.application.shoppingcart.ShoppingCartNotFoundException;
+import com.algaworks.algashop.ordering.domain.model.shoppingcart.ShoppingCartNotFoundException;
 import com.algaworks.algashop.ordering.domain.model.commons.Money;
 import com.algaworks.algashop.ordering.domain.model.commons.Quantity;
 import com.algaworks.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
