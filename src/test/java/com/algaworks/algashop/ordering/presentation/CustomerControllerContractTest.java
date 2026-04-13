@@ -49,7 +49,10 @@ class CustomerControllerContractTest {
     @Test
     public void createCustomerContract() {
         var customerOutput = CustomerOutputTestDataBuilder.existing().build();
-        Mockito.when(customerManagementApplicationService.create(Mockito.any(CustomerInput.class))).thenReturn(UUID.randomUUID());
+
+        var customerId = customerOutput.getId();
+
+        Mockito.when(customerManagementApplicationService.create(Mockito.any(CustomerInput.class))).thenReturn(customerId);
         Mockito.when(customerQueryService.findById(Mockito.any(UUID.class))).thenReturn(
                 customerOutput
         );
@@ -86,6 +89,7 @@ class CustomerControllerContractTest {
                     .assertThat()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .statusCode(HttpStatus.CREATED.value())
+                    .header("Location", Matchers.containsString("/api/v1/customers/" + customerId))
                     .body("id", Matchers.notNullValue(),
                             "registeredAt", Matchers.notNullValue(),
                             "firstName", Matchers.is("John"),
