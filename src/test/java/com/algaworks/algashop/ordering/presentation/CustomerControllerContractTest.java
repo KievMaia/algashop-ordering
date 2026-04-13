@@ -1,10 +1,8 @@
 package com.algaworks.algashop.ordering.presentation;
 
-import com.algaworks.algashop.ordering.application.commons.AddressData;
 import com.algaworks.algashop.ordering.application.customer.management.CustomerInput;
 import com.algaworks.algashop.ordering.application.customer.management.CustomerManagementApplicationService;
 import com.algaworks.algashop.ordering.application.customer.query.CustomerFilter;
-import com.algaworks.algashop.ordering.application.customer.query.CustomerOutput;
 import com.algaworks.algashop.ordering.application.customer.query.CustomerOutputTestDataBuilder;
 import com.algaworks.algashop.ordering.application.customer.query.CustomerQueryService;
 import com.algaworks.algashop.ordering.application.customer.query.CustomerSummaryOutputTestDataBuilder;
