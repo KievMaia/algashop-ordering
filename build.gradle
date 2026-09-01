@@ -58,8 +58,7 @@ dependencies {
 }
 
 contracts {
-	testFramework ='JUNIT5'
-	testMode = 'MockMvc' #RestAssuredMockMvc
+	packageWithBaseClasses = "com.algaworks.algashop.ordering.contracts.base"
 }
 
 tasks.named('test') {
