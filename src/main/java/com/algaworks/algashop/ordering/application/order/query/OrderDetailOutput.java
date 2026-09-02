@@ -16,7 +16,7 @@ import java.util.List;
 @Builder
 public class OrderDetailOutput {
     private String id;
-    private CustomerMinimalOutput customerMinimalOutput;
+    private CustomerMinimalOutput customer;
     private Integer totalItems;
     private BigDecimal totalAmount;
     private OffsetDateTime placedAt;

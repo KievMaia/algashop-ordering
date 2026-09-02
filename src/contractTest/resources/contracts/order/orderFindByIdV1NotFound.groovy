@@ -6,7 +6,7 @@ Contract.make {
     request {
         method GET()
         headers {
-            accept "application-json"
+            accept "application/json"
         }
         url("/api/v1/orders/01226N0693HDH")
     }

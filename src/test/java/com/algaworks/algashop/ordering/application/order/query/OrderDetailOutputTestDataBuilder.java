@@ -21,7 +21,7 @@ public class OrderDetailOutputTestDataBuilder {
     public static OrderDetailOutput.OrderDetailOutputBuilder placedOrder(String orderId) {
         return OrderDetailOutput.builder()
                 .id(orderId)
-                .customerMinimalOutput(CustomerMinimalOutput.builder()
+                .customer(CustomerMinimalOutput.builder()
                         .id(new CustomerId().value())
                         .firstName("John")
                         .lastName("Doe")
@@ -30,7 +30,7 @@ public class OrderDetailOutputTestDataBuilder {
                         .phone("1191234564")
                         .build())
                 .totalItems(2)
-                .totalAmount(new BigDecimal("39.98"))
+                .totalAmount(new BigDecimal("41.98"))
                 .placedAt(OffsetDateTime.now())
                 .paidAt(null)
                 .canceledAt(null)
@@ -83,7 +83,7 @@ public class OrderDetailOutputTestDataBuilder {
                 .productName("Notebook Dive Gamer X11")
                 .price(new BigDecimal("19.99"))
                 .quantity(2)
-                .totalAmount(new BigDecimal("41.98"))
+                .totalAmount(new BigDecimal("19.99"))
                 .build());
         return items;
     }
