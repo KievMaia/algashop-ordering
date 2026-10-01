@@ -60,6 +60,7 @@ public class OrderDetailOutputTestDataBuilder {
                         .firstName("John")
                         .lastName("Doe")
                         .document("12345")
+                        .email("johndoe@email.com")
                         .phone("5511912341234")
                         .address(AddressData.builder()
                                 .street("Bourbon Street")
