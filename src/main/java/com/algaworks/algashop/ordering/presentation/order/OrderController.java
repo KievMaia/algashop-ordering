@@ -1,4 +1,4 @@
-package com.algaworks.algashop.ordering.presentation;
+package com.algaworks.algashop.ordering.presentation.order;
 
 import com.algaworks.algashop.ordering.application.checkout.BuyNowApplicationService;
 import com.algaworks.algashop.ordering.application.checkout.BuyNowInput;
@@ -8,6 +8,7 @@ import com.algaworks.algashop.ordering.application.order.query.OrderDetailOutput
 import com.algaworks.algashop.ordering.application.order.query.OrderFilter;
 import com.algaworks.algashop.ordering.application.order.query.OrderQueryService;
 import com.algaworks.algashop.ordering.application.order.query.OrderSummaryOutput;
+import com.algaworks.algashop.ordering.presentation.PageModel;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -40,14 +41,14 @@ public class OrderController {
 
     @PostMapping(consumes = "application/vnd.order-with-product.v1+json")
     @ResponseStatus(HttpStatus.CREATED)
-    public OrderDetailOutput buyNow(@RequestBody @Valid BuyNowInput input) {
+    public OrderDetailOutput createWithProduct(@RequestBody @Valid BuyNowInput input) {
         var orderId = buyNowApplicationService.buyNow(input);
         return orderQueryService.findById(orderId);
     }
 
     @PostMapping(consumes = "application/vnd.order-with-shopping-cart.v1+json")
     @ResponseStatus(HttpStatus.CREATED)
-    public OrderDetailOutput checkout(@RequestBody @Valid CheckoutInput input) {
+    public OrderDetailOutput createWithShoppingCart(@RequestBody @Valid CheckoutInput input) {
         var orderId = checkoutApplicationService.checkout(input);
         return orderQueryService.findById(orderId);
     }
